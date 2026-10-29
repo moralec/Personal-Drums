@@ -21,3 +21,6 @@
 ## Open
 - Nothing here was tested in a browser: the Chrome extension was not connected. Check by ear/eye: the switch row on a phone (wrap), the stage height with the new row, install from Safari/Chrome, and offline (open online once, then wifi off).
 - Icon is the drum only; the cup is not in it. Carlos may want to see the icon in the Dock.
+
+## Deployed
+`./deploy.sh` -> https://drums.ag-insights.co.uk (deploy 6ae35466745ad3905e41f442). sw.js, manifest and icons answer 200.
