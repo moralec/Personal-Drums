@@ -25,3 +25,5 @@
 **Fourth pass:** timeline rows reordered (rim, drum, cup). Level logic replaced by note values (quarters / eighths / 16ths+): Livin' on a Prayer 692 / 937 / 1006 hits (2.8 / 3.7 / 4.0 per s); Twinkle 75 / 126 / 129. Discussed 'all snares at Easy plus a few others' first, then Carlos chose the note-value rule instead.
 
 **Fourth pass:** timeline rows reordered (rim, drum, cup). Level logic replaced by note values: Quarters / Eighths / 16ths / All hits. Livin' on a Prayer 692 / 937 / 965 / 1006 hits; Twinkle 75 / 126 / 129 / 129. 'All hits' is the song untouched. Discussed 'all snares at Easy plus a few others' first; Carlos chose the note-value rule instead.
+
+**Fifth pass:** added half notes as the easiest level and renamed the buttons Level 1-5 (note value shown underneath). Livin' on a Prayer 397 / 692 / 937 / 965 / 1006; Twinkle 27 / 75 / 126 / 129 / 129.

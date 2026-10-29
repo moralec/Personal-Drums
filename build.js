@@ -109,9 +109,9 @@ const LANE = {
   42: 1, 44: 1, 51: 1, 53: 1, 59: 1,
   46: 2, 49: 2, 52: 2, 55: 2, 57: 2,
 };
-// How busy: the level is the note value a hit sits on. 1 = quarter notes (on the beat), 2 = adds eighths, 3 = adds 16ths,
-// 4 = every hit, including anything off the 16th grid (triplets, flams), so the lights match the drums you hear.
-// Levels are nested: a hit shown at one level is shown at every level above it.
+// How busy: the level is the note value a hit sits on. 1 = half notes (every 2 beats), 2 = adds quarters (on the beat),
+// 3 = adds eighths, 4 = adds 16ths, 5 = every hit, including anything off the 16th grid (triplets, flams),
+// so the lights match the drums you hear. Levels are nested: a hit shown at one level is shown at every level above it.
 const TOLERANCE = 0.07; // beats; MIDI drums are rarely perfectly on the grid
 
 function onGrid(beat, grid) {
@@ -120,10 +120,11 @@ function onGrid(beat, grid) {
 }
 
 function levelOf(beat) {
-  if (onGrid(beat, 1)) return 1;
-  if (onGrid(beat, 0.5)) return 2;
-  if (onGrid(beat, 0.25)) return 3;
-  return 4;
+  if (onGrid(beat, 2)) return 1;
+  if (onGrid(beat, 1)) return 2;
+  if (onGrid(beat, 0.5)) return 3;
+  if (onGrid(beat, 0.25)) return 4;
+  return 5;
 }
 
 // ---------- one song ----------
@@ -157,11 +158,11 @@ function convert(file, meta) {
     bass: pitched.filter(isBass).map(pack),
     lead: pitched.filter(n => !isBass(n)).map(pack),
   };
-  const per = [1, 2, 3, 4].map(l => song.hits.filter(h => h[2] <= l).length);
+  const per = [1, 2, 3, 4, 5].map(l => song.hits.filter(h => h[2] <= l).length);
   const perSec = song.dur ? per.map(n => (n / song.dur).toFixed(2)) : [];
-  console.log(`${slug}: ${bpm} bpm, ${song.dur}s, drum hits quarters/eighths/16ths/all = ${per.join('/')} (${perSec.join('/')} per s), ` +
+  console.log(`${slug}: ${bpm} bpm, ${song.dur}s, drum hits by level 1-5 (halves/quarters/eighths/16ths/all) = ${per.join('/')} (${perSec.join('/')} per s), ` +
     `${song.bass.length} bass + ${song.lead.length} lead notes, ${song.drums.length} drum notes`);
-  if (!per[0]) console.warn(`  WARN ${slug}: no hits on the quarter-note level (no drum track on channel 10?)`);
+  if (!per[0]) console.warn(`  WARN ${slug}: no hits on the half-note level (no drum track on channel 10?)`);
   return song;
 }
 
