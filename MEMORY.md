@@ -11,3 +11,4 @@
 - **Look and feel = guitar app** (Carlos, 2026-10-29): dark `#0f0f0f`, amber `#f5a623`, Helvetica Neue, segmented controls. Toddler targets stay big.
 - **Full MIDI plays, drums included; lights must match the hits exactly** (Carlos). So "Every hit" lights all mapped hits and the visuals subtract output latency. Easy/Medium are subsets of what is heard. Kick: audible, no target.
 - **Art is generated, effects are measured:** Carlos generates the picture from a prompt; `tools/measure.py` finds the shapes by colour. The artwork's background is about `#131313`, not `#0f0f0f`; the stage uses `#131313` to avoid a visible seam.
+- **Head glow is the middle of the drumhead only** (Carlos, 2026-10-29: "a bit narrower, in the center"): `HEAD_GLOW` in `tools/measure.py`. **Timeline** under the stage: 3 rows, playhead left to right, paged by 8 beats.

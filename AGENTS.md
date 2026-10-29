@@ -16,7 +16,11 @@ The whole MIDI plays through a built-in Web Audio synth, drums included. The "Ev
 
 ## The picture and its hit areas
 
-`img/source/scene.png` is the generated artwork (drum, rim, cup). `python3 tools/measure.py` segments it by colour (needs pillow, numpy, opencv-python), writes `img/scene.webp`, and writes the three lane outlines (SVG paths in image pixels) into the `LANES` block of `index.html` (never hand-edit). Each lane gets a halo, a fill, an expanding ring and a tap area drawn on exactly that outline. A new picture means re-running measure.py and checking `img/debug.png` (gitignored). Look and feel follows the guitar app (dark `#0f0f0f`, amber `#f5a623`, Helvetica Neue).
+`img/source/scene.png` is the generated artwork (drum, rim, cup). `python3 tools/measure.py` segments it by colour (needs pillow, numpy, opencv-python), writes `img/scene.webp`, and writes the three lane outlines (SVG paths in image pixels) into the `LANES` block of `index.html` (never hand-edit). Each lane gets a halo, a fill, an expanding ring and a tap area. The head's lit area is a smaller outline (`g`, `HEAD_GLOW` = 0.62 of the head in measure.py) so only the middle of the drumhead glows; its tap area is the whole head.
+
+## Timeline
+
+A canvas under the stage: three rows (Drum, Rim, Cup), one page of 8 beats at a time, an amber playhead sweeping left to right, then the next page. Dots are the hits for the chosen level (faded once played). Drawn by `drawTimeline(now)` from the same `laneHits` and heard-time as the glows. Pages assume the MIDI's first tempo; a song with tempo changes will drift against the beat lines. A new picture means re-running measure.py and checking `img/debug.png` (gitignored). Look and feel follows the guitar app (dark `#0f0f0f`, amber `#f5a623`, Helvetica Neue).
 
 ## Rules of thumb
 

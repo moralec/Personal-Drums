@@ -24,13 +24,17 @@ def component(mask, seed):
     n, lab = cv2.connectedComponents(mask)
     return (lab == lab[seed[1], seed[0]]).astype(np.uint8) * 255
 
-def path_of(mask, eps=2.0):
-    """SVG path (even-odd) from the outer contour and any holes of a mask."""
+def path_of(mask, eps=2.0, scale=1.0):
+    """SVG path (even-odd) from the outer contour and any holes of a mask, optionally shrunk about its centre."""
+    ys, xs = np.nonzero(mask)
+    cx, cy = (xs.min() + xs.max()) / 2, (ys.min() + ys.max()) / 2
     cs, hier = cv2.findContours(mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
     d = []
     for c in cs:
         if cv2.contourArea(c) < 200: continue
         a = cv2.approxPolyDP(c, eps, True).reshape(-1, 2)
+        if scale != 1.0:
+            a = np.rint(np.array([cx, cy]) + (a - np.array([cx, cy])) * scale).astype(int)
         d.append('M' + ' L'.join(f'{x} {y}' for x, y in a) + 'Z')
     return ' '.join(d)
 
@@ -56,11 +60,13 @@ for c, hh in zip(cs, hier[0]):
     if hh[3] != -1 and cv2.contourArea(c) > 6000: cv2.drawContours(filled, [c], -1, 0, -1)  # keep the handle gap open
 cup = filled
 
+HEAD_GLOW = 0.62   # share of the drumhead (width and height) that lights up
 lanes = {}
 for i, (name, m) in enumerate([('head', head), ('rim', rim), ('cup', cup)]):
     ys, xs = np.nonzero(m)
     lanes[name] = {'lane': i, 'd': path_of(m), 'bbox': [int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())],
                    'center': [int(xs.mean()), int(ys.mean())], 'area': int((m > 0).sum())}
+    if name == 'head': lanes[name]['g'] = path_of(m, scale=HEAD_GLOW)  # lit area: the middle of the drumhead; the tap area stays the whole head
     print(name, lanes[name]['bbox'], 'center', lanes[name]['center'], 'area', lanes[name]['area'], 'path chars', len(lanes[name]['d']))
 
 # debug overlay

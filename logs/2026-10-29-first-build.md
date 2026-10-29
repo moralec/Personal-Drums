@@ -19,3 +19,5 @@
 - DNS for ag-insights.co.uk is at IONOS (ui-dns), so the CNAME `drums` -> `drums-ag-insights.netlify.app` is a manual step for Carlos.
 
 **Second pass (same day):** restyled to match guitar (dark/amber); drums now always play in full and the top level is "Every hit" (all mapped hits, 4.0/s on Livin' on a Prayer); visuals use output-latency compensation. Carlos generated `img/source/scene.png` (2000x1493); `tools/measure.py` measured head/rim/cup outlines (colour segmentation) and the page draws halo, fill, ripple and tap area on those exact paths. Checked in headless Chrome with forced glow states; timing by ear still to do.
+
+**Third pass:** head glow shrunk to the middle of the drumhead (measure.py `g` outline); added the 3-row paged timeline (`drawTimeline`). Checked in headless Chrome with forced states (note: a screenshot capture triggers a resize, which redraws the idle timeline; test copies drop that listener). Not yet played through by ear.

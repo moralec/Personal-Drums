@@ -54,6 +54,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 @keyframes pop { 0% { opacity: 1; transform: translateX(-50%) scale(1.5); } 100% { opacity: 0; transform: translateX(-50%) scale(.9); } }
 #done { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 16px; background: rgba(15,15,15,.88); border-radius: 12px; font-size: clamp(36px, 8vw, 72px); font-weight: 800; color: #fff; }
 #done.show { display: flex; }
+#tl { display: block; width: 100%; height: 132px; margin-top: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
 .controls { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; padding-top: 10px; }
 .play { width: 96px; height: 96px; border-radius: 50%; font-size: 42px; background: var(--amber); color: #000; }
 .play.stop { background: var(--stop); color: #fff; }
@@ -157,7 +158,7 @@ function tap(lane) {
 }
 
 /* LANES:BEGIN */
-const SCENE = {"w":2000,"h":1493,"lanes":[{"lane":0,"d":"M193 544 L193 596 L201 625 L213 651 L248 698 L298 741 L370 782 L441 809 L524 829 L610 839 L704 839 L788 829 L879 806 L947 779 L1011 742 L1064 697 L1083 674 L1104 639 L1113 615 L1119 586 L1116 535 L1098 488 L1063 440 L1010 395 L952 361 L878 331 L784 308 L687 298 L579 301 L510 311 L433 331 L369 356 L304 393 L268 421 L243 446 L213 488 L201 514Z","bbox":[191,298,1119,840],"center":[655,568],"area":394835},{"lane":1,"d":"M150 521 L144 556 L144 628 L150 669 L172 719 L185 739 L212 770 L245 800 L276 822 L357 865 L452 897 L556 917 L611 922 L698 922 L756 917 L860 897 L910 882 L961 862 L1035 822 L1075 792 L1104 765 L1125 740 L1142 713 L1159 675 L1166 642 L1166 550 L1154 502 L1125 449 L1085 404 L1052 377 L1016 353 L944 317 L846 285 L751 268 L635 263 L544 270 L445 290 L359 320 L288 357 L228 402 L204 426 L178 460 L160 493Z M192 544 L200 514 L212 488 L242 446 L290 402 L331 375 L369 355 L433 330 L510 310 L579 300 L687 297 L784 307 L878 330 L952 360 L1010 394 L1064 440 L1099 488 L1117 535 L1120 586 L1114 615 L1105 639 L1084 674 L1065 697 L1011 743 L947 780 L879 807 L788 830 L704 840 L610 840 L524 830 L441 810 L370 783 L298 742 L247 698 L212 651 L200 625 L192 596Z","bbox":[144,263,1167,922],"center":[655,658],"area":145711},{"lane":2,"d":"M1489 488 L1446 501 L1410 519 L1381 543 L1362 571 L1355 600 L1355 805 L1365 805 L1372 811 L1378 823 L1378 835 L1375 842 L1367 848 L1355 846 L1356 922 L1348 922 L1345 879 L1333 906 L1333 930 L1349 946 L1354 971 L1380 993 L1392 1000 L1432 1003 L1440 1009 L1446 1019 L1462 1019 L1486 1034 L1527 1039 L1585 1039 L1631 1033 L1648 1017 L1662 1011 L1673 1011 L1688 1017 L1727 997 L1735 978 L1741 972 L1757 967 L1767 936 L1780 926 L1781 912 L1778 899 L1765 899 L1765 920 L1757 920 L1755 891 L1800 891 L1821 887 L1847 875 L1864 858 L1876 835 L1883 803 L1883 778 L1876 746 L1858 716 L1837 699 L1813 688 L1767 678 L1759 673 L1757 593 L1754 579 L1739 551 L1712 525 L1685 509 L1664 508 L1651 494 L1610 488 L1607 485 L1534 482Z M1755 711 L1776 713 L1808 722 L1826 732 L1840 747 L1848 762 L1854 785 L1854 818 L1846 846 L1837 844 L1823 852 L1795 857 L1756 855 L1756 721 L1753 719Z","bbox":[1332,482,1883,1040],"center":[1569,764],"area":216640}]};
+const SCENE = {"w":2000,"h":1493,"lanes":[{"lane":0,"d":"M193 544 L193 596 L201 625 L213 651 L248 698 L298 741 L370 782 L441 809 L524 829 L610 839 L704 839 L788 829 L879 806 L947 779 L1011 742 L1064 697 L1083 674 L1104 639 L1113 615 L1119 586 L1116 535 L1098 488 L1063 440 L1010 395 L952 361 L878 331 L784 308 L687 298 L579 301 L510 311 L433 331 L369 356 L304 393 L268 421 L243 446 L213 488 L201 514Z","bbox":[191,298,1119,840],"center":[655,568],"area":394835,"g":"M369 554 L369 586 L374 604 L381 620 L403 649 L434 676 L478 701 L522 718 L574 730 L627 736 L685 736 L737 730 L794 716 L836 699 L876 676 L909 648 L920 634 L933 612 L939 598 L943 580 L941 548 L930 519 L908 489 L875 461 L839 440 L793 421 L735 407 L675 401 L608 403 L565 409 L517 421 L478 437 L437 460 L415 477 L400 493 L381 519 L374 535Z"},{"lane":1,"d":"M150 521 L144 556 L144 628 L150 669 L172 719 L185 739 L212 770 L245 800 L276 822 L357 865 L452 897 L556 917 L611 922 L698 922 L756 917 L860 897 L910 882 L961 862 L1035 822 L1075 792 L1104 765 L1125 740 L1142 713 L1159 675 L1166 642 L1166 550 L1154 502 L1125 449 L1085 404 L1052 377 L1016 353 L944 317 L846 285 L751 268 L635 263 L544 270 L445 290 L359 320 L288 357 L228 402 L204 426 L178 460 L160 493Z M192 544 L200 514 L212 488 L242 446 L290 402 L331 375 L369 355 L433 330 L510 310 L579 300 L687 297 L784 307 L878 330 L952 360 L1010 394 L1064 440 L1099 488 L1117 535 L1120 586 L1114 615 L1105 639 L1084 674 L1065 697 L1011 743 L947 780 L879 807 L788 830 L704 840 L610 840 L524 830 L441 810 L370 783 L298 742 L247 698 L212 651 L200 625 L192 596Z","bbox":[144,263,1167,922],"center":[655,658],"area":145711},{"lane":2,"d":"M1489 488 L1446 501 L1410 519 L1381 543 L1362 571 L1355 600 L1355 805 L1365 805 L1372 811 L1378 823 L1378 835 L1375 842 L1367 848 L1355 846 L1356 922 L1348 922 L1345 879 L1333 906 L1333 930 L1349 946 L1354 971 L1380 993 L1392 1000 L1432 1003 L1440 1009 L1446 1019 L1462 1019 L1486 1034 L1527 1039 L1585 1039 L1631 1033 L1648 1017 L1662 1011 L1673 1011 L1688 1017 L1727 997 L1735 978 L1741 972 L1757 967 L1767 936 L1780 926 L1781 912 L1778 899 L1765 899 L1765 920 L1757 920 L1755 891 L1800 891 L1821 887 L1847 875 L1864 858 L1876 835 L1883 803 L1883 778 L1876 746 L1858 716 L1837 699 L1813 688 L1767 678 L1759 673 L1757 593 L1754 579 L1739 551 L1712 525 L1685 509 L1664 508 L1651 494 L1610 488 L1607 485 L1534 482Z M1755 711 L1776 713 L1808 722 L1826 732 L1840 747 L1848 762 L1854 785 L1854 818 L1846 846 L1837 844 L1823 852 L1795 857 L1756 855 L1756 721 L1753 719Z","bbox":[1332,482,1883,1040],"center":[1569,764],"area":216640}]};
 /* LANES:END */
 
 // ---------- scene ----------
@@ -168,12 +169,12 @@ const GLOW = [
 ];
 function sceneSvg() {
   const lane = (i) => {
-    const L = SCENE.lanes[i], c = GLOW[i];
+    const L = SCENE.lanes[i], c = GLOW[i], g = L.g || L.d;   // g: smaller lit outline (head only)
     const stroke = i === 1 ? ' stroke="transparent" stroke-width="40"' : '';
     return `<g class="lane" data-lane="${i}">
-      <path id="h${i}" class="glow-h" d="${L.d}" fill="${c.halo}" fill-rule="evenodd" filter="url(#blur)"/>
-      <path id="f${i}" class="glow-f" d="${L.d}" fill="${c.fill}" fill-rule="evenodd"/>
-      <path id="r${i}" class="ripple" d="${L.d}" fill="none" stroke="${c.fill}" stroke-width="10" fill-rule="evenodd"/>
+      <path id="h${i}" class="glow-h" d="${g}" fill="${c.halo}" fill-rule="evenodd" filter="url(#blur)"/>
+      <path id="f${i}" class="glow-f" d="${g}" fill="${c.fill}" fill-rule="evenodd"/>
+      <path id="r${i}" class="ripple" d="${g}" fill="none" stroke="${c.fill}" stroke-width="10" fill-rule="evenodd"/>
       <path d="${L.d}" fill="transparent" fill-rule="evenodd" pointer-events="all"${stroke}/>
     </g>`;
   };
@@ -214,6 +215,7 @@ function buildLaneHits() {
   laneHits = [[], [], []];
   for (const [ms, lane, lvl] of song.hits) if (lvl <= prog.level) laneHits[lane].push(ms / 1000);
   nextI = [0, 0, 0];
+  drawTimeline(run ? songHeard() : 0);
 }
 
 function songView(s) {
@@ -226,6 +228,7 @@ function songView(s) {
     </div>
     <div class="stage">${sceneSvg()}<div id="count"></div>
       <div id="done"><div>🎉 Yay! 🎉</div><button class="play" id="again" aria-label="again">▶</button></div></div>
+    <canvas id="tl" aria-label="timeline"></canvas>
     <div class="controls">
       <div class="seg" id="lvls">
         ${[1, 2, 3].map(l => `<button data-l="${l}" aria-pressed="${prog.level === l}">${['Easy', 'Medium', 'Every hit'][l - 1]}</button>`).join('')}
@@ -276,6 +279,7 @@ function stopSong() {
   const go = document.getElementById('go');
   if (go) { go.textContent = '▶'; go.classList.remove('stop'); }
   for (let l = 0; l < 3; l++) setGlow(l, 0);
+  drawTimeline(0);
   const c = document.getElementById('count'); if (c) c.style.opacity = 0;
 }
 
@@ -340,6 +344,7 @@ function frame() {
     const tp = Math.max(0, 1 - (performance.now() - tapFlash[l]) / 250);
     setGlow(l, Math.max(flash, 0.7 * charge * charge, tp), Math.min(1, (now - last) / speed / 0.45));
   }
+  drawTimeline(now);
   // count-in number
   if (now < 0) {
     const n = Math.floor((now + song.countIn * run.beat) / run.beat) + 1;
@@ -357,6 +362,60 @@ function frame() {
   }
   run.raf = requestAnimationFrame(frame);
 }
+
+// ---------- timeline: three rows, a playhead sweeping left to right, one page of 8 beats at a time ----------
+const TL_COLORS = ['#f5a623', '#5b9bd5', '#ff6b81'], TL_NAMES = ['Drum', 'Rim', 'Cup'], PAGE_BEATS = 8;
+function lowerBound(a, x) { let lo = 0, hi = a.length; while (lo < hi) { const m = (lo + hi) >> 1; if (a[m] < x) lo = m + 1; else hi = m; } return lo; }
+
+function drawTimeline(now) {
+  const cv = document.getElementById('tl');
+  if (!cv || !song) return;
+  const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+  if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const c = cv.getContext('2d');
+  c.setTransform(dpr, 0, 0, dpr, 0, 0);
+  c.clearRect(0, 0, W, H);
+
+  const beat = 60 / song.bpm, pageSec = PAGE_BEATS * beat;
+  const page = Math.max(0, Math.floor(now / pageSec)), p0 = page * pageSec;
+  const padY = 10, labelW = 66, x0 = labelW, x1 = W - 14, rowH = (H - padY * 2) / 3;
+  const X = t => x0 + (t - p0) / pageSec * (x1 - x0);
+
+  // rows
+  for (let l = 0; l < 3; l++) {
+    const y = padY + l * rowH;
+    c.fillStyle = 'rgba(255,255,255,0.035)';
+    c.beginPath(); c.roundRect(x0, y + 3, x1 - x0, rowH - 6, 8); c.fill();
+    c.fillStyle = TL_COLORS[l]; c.globalAlpha = 0.9;
+    c.beginPath(); c.arc(14, y + rowH / 2, 5, 0, 7); c.fill(); c.globalAlpha = 1;
+    c.fillStyle = '#888'; c.font = '600 10px "Helvetica Neue", Helvetica, Arial, sans-serif'; c.textBaseline = 'middle';
+    c.fillText(TL_NAMES[l].toUpperCase(), 26, y + rowH / 2 + 0.5);
+  }
+  // beat and bar lines
+  for (let b = 0; b <= PAGE_BEATS; b++) {
+    const x = X(p0 + b * beat);
+    c.strokeStyle = b % 4 === 0 ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.08)';
+    c.lineWidth = 1; c.beginPath(); c.moveTo(x, padY); c.lineTo(x, H - padY); c.stroke();
+  }
+  // hits
+  const r = Math.min(rowH * 0.32, 15);
+  for (let l = 0; l < 3; l++) {
+    const a = laneHits[l], cy = padY + l * rowH + rowH / 2;
+    for (let i = lowerBound(a, p0 - 0.01); i < a.length && a[i] < p0 + pageSec; i++) {
+      const t = a[i], x = X(t), d = (now - t) / speed;
+      c.fillStyle = TL_COLORS[l];
+      if (d > 0.3) { c.globalAlpha = 0.3; c.beginPath(); c.arc(x, cy, r * 0.8, 0, 7); c.fill(); }          // already played
+      else if (d >= 0) { c.globalAlpha = 1; c.beginPath(); c.arc(x, cy, r * (1 + 0.7 * (1 - d / 0.3)), 0, 7); c.fill(); }  // hit now
+      else { c.globalAlpha = 1; c.beginPath(); c.arc(x, cy, r, 0, 7); c.fill(); }                         // coming up
+    }
+  }
+  c.globalAlpha = 1;
+  // playhead
+  const px = X(Math.max(now, p0));
+  c.save(); c.shadowColor = '#f5a623'; c.shadowBlur = 10; c.strokeStyle = '#f5a623'; c.lineWidth = 2.5;
+  c.beginPath(); c.moveTo(px, padY - 4); c.lineTo(px, H - padY + 4); c.stroke(); c.restore();
+}
+addEventListener('resize', () => drawTimeline(run ? songHeard() : 0));
 
 // ---------- routing ----------
 function route() {
