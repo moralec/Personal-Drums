@@ -26,5 +26,8 @@ A canvas under the stage: three rows (Rim, Drum, Cup, top to bottom; `TL_ORDER`)
 
 - Tuned for a toddler: big targets, no reading needed, count-in 1-2-3-4. Adult controls (level, slow, hear drums) stay small.
 - Progress is `localStorage` key `drumsProgress` (plays, starred, level, hand). Per browser.
-- **Left-handed** toggle (pill under the stage): mirrors the whole scene with `scaleX(-1)` on the SVG (drum right, cup left). Glows, tap areas and hit effects mirror with it; the timeline rows do not change.
+- Settings are three switches above the stage (`.sw`): Slow, **2 pads** and **Left-handed**; Level and Play stay below. All are saved in `drumsProgress` (`slow`, `simple`, `hand`).
+- **2 pads**: drops the rim from `laneHits` at runtime (no rebuild). The hi-hat stays audible like the kick; the rim is hidden and untappable and the timeline has two rows.
+- **Left-handed**: mirrors the whole scene with `scaleX(-1)` on the SVG (drum right, cup left). Glows, tap areas and hit effects mirror with it; the timeline rows do not change.
+- **Installable and offline**: `manifest.webmanifest`, icons from `python3 tools/icon.py` (the drum from `scene.png`), and `sw.js` (network first, cache fallback; bump `CACHE` to drop old files). Install only works from the deployed site.
 - Don't rename a song's file once in use: the slug is the progress key.
