@@ -33,3 +33,5 @@
 **Seventh pass:** ride cymbal (GM 51/53/59) moved from the rim lane to the cup lane; the rim is now hi-hat only (42/44).
 
 **Eighth pass:** Left-handed toggle (mirrors the scene, remembered in the browser).
+
+**Ninth pass:** open hi-hat (GM 46) moved from the cup back to the rim (11 hits in Livin' on a Prayer).
