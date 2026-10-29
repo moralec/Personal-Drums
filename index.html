@@ -417,7 +417,7 @@ function drawTimeline(now) {
   const r = Math.min(rowH * 0.32, 15);
   for (let row = 0; row < 3; row++) {
     const l = TL_ORDER[row], a = laneHits[l], cy = padY + row * rowH + rowH / 2;
-    for (let i = lowerBound(a, p0 - 0.01); i < a.length && a[i] < p0 + pageSec; i++) {
+    for (let i = lowerBound(a, p0 - 0.01); i < a.length && a[i] <= p0 + pageSec + 0.01; i++) {   // the right edge is beat 0 of the next page: a hit there shows on both
       const t = a[i], x = X(t), d = (now - t) / speed;
       c.fillStyle = TL_COLORS[l];
       if (d > 0.3) { c.globalAlpha = 0.3; c.beginPath(); c.arc(x, cy, r * 0.8, 0, 7); c.fill(); }          // already played

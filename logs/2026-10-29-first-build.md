@@ -35,3 +35,5 @@
 **Eighth pass:** Left-handed toggle (mirrors the scene, remembered in the browser).
 
 **Ninth pass:** open hi-hat (GM 46) moved from the cup back to the rim (11 hits in Livin' on a Prayer).
+
+**Tenth pass:** timeline page edges: the right-edge line is the first line of the next page. Kept both lines, and a hit on the boundary now draws on both pages (it only appeared after the page flipped before).
