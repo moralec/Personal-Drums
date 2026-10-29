@@ -11,3 +11,9 @@
 **Checked:** `node --check` on the page script; headless Chrome screenshots of both views; a headless play run (glow state and hit counts). **Not checked:** actual audio and timing by ear (headless audio clock does not advance); behaviour on a tablet.
 
 **Then:** Carlos supplied `~/Downloads/Bon Jovi - Living on a Prayer.mid`; copied to `midi/livin-on-a-prayer.mid` and built: 123 bpm, 251 s, drum hits Easy/Medium/Busy = 210/691/955 (0.84/2.75/3.81 per s); at Easy head/rim/cup = 167/12/31. First real song, not yet tried by ear.
+
+**Published (Carlos asked for a public GitHub repo and a Netlify deploy):**
+- Repo: https://github.com/moralec/Personal-Drums (public). Carries Twinkle only.
+- Private songs: `midi/private/*.mid` -> `songs-private.js`, both gitignored. Carlos chose "public repo without it, deploy with it": the Netlify site serves the Bon Jovi data, the repo does not.
+- Netlify project `drums-ag-insights` (id a341d2f6-1441-4fc5-bfc1-06142b28f60e), https://drums-ag-insights.netlify.app, custom domain `drums.ag-insights.co.uk` set on the project. NOT linked to GitHub: `./deploy.sh` is the only publisher (it ships `index.html` + `songs-private.js` from a temp dir, so `midi/`, logs and MEMORY are not served).
+- DNS for ag-insights.co.uk is at IONOS (ui-dns), so the CNAME `drums` -> `drums-ag-insights.netlify.app` is a manual step for Carlos.
