@@ -210,7 +210,9 @@ function libraryView() {
 }
 
 // play state
-const LEVEL_NOTE = ['Half notes', 'Quarter notes', 'Eighth notes', '16th notes', 'Every hit'];
+const LEVEL_NAME = ['Beginner', 'Easy', 'Medium', 'Hard', 'Expert'];
+const LEVEL_NOTE = ['half notes', 'quarter notes', 'eighth notes', '16th notes', 'every hit'];
+const levelCaption = l => `Level ${l} · ${LEVEL_NOTE[l - 1]}`;
 let song = null, run = null, speed = 1, laneHits = [[], [], []], nextI = [0, 0, 0];
 const LEAD = 0.5, FLASH = 0.22;
 
@@ -235,9 +237,9 @@ function songView(s) {
     <div class="controls">
       <div class="lvl">
         <div class="seg" id="lvls" role="group" aria-label="Level">
-          ${[1, 2, 3, 4, 5].map(l => `<button data-l="${l}" aria-pressed="${prog.level === l}">Level ${l}</button>`).join('')}
+          ${[1, 2, 3, 4, 5].map(l => `<button data-l="${l}" aria-pressed="${prog.level === l}">${LEVEL_NAME[l - 1]}</button>`).join('')}
         </div>
-        <div class="lvl-note" id="lvlnote">${LEVEL_NOTE[prog.level - 1]}</div>
+        <div class="lvl-note" id="lvlnote">${levelCaption(prog.level)}</div>
       </div>
       <button class="play" id="go" aria-label="play">▶</button>
       <button class="pill" id="slow" aria-pressed="${speed < 1}">🐢 Slow</button>
@@ -251,7 +253,7 @@ function songView(s) {
     const l = +(e.target.dataset && e.target.dataset.l); if (!l) return;
     prog.level = l; saveProg();
     app.querySelectorAll('#lvls button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.l === l));
-    document.getElementById('lvlnote').textContent = LEVEL_NOTE[l - 1];
+    document.getElementById('lvlnote').textContent = levelCaption(l);
     buildLaneHits();
   };
   app.querySelector('#slow').onclick = e => {
@@ -385,7 +387,7 @@ function drawTimeline(now) {
 
   const beat = 60 / song.bpm, pageSec = PAGE_BEATS * beat;
   const page = Math.max(0, Math.floor(now / pageSec)), p0 = page * pageSec;
-  const padY = 10, labelW = 66, x0 = labelW, x1 = W - 14, rowH = (H - padY * 2) / 3;
+  const padY = 10, labelW = 90, x0 = labelW, x1 = W - 14, rowH = (H - padY * 2) / 3;
   const X = t => x0 + (t - p0) / pageSec * (x1 - x0);
 
   // rows
