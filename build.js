@@ -102,12 +102,12 @@ function extractNotes(midi) {
 
 // ---------- drum mapping + "how busy" ----------
 
-// GM drum note -> lane. 0 = drum head (snare, toms), 1 = rim (hi-hat, ride), 2 = cup (crash, open hat).
+// GM drum note -> lane. 0 = drum head (snare, toms), 1 = rim (hi-hat only), 2 = cup (every other metal: crash, open hat, ride).
 // The kick (35/36) has no instrument: it stays in the backing only.
 const LANE = {
   38: 0, 40: 0, 37: 0, 41: 0, 43: 0, 45: 0, 47: 0, 48: 0, 50: 0,
-  42: 1, 44: 1, 51: 1, 53: 1, 59: 1,
-  46: 2, 49: 2, 52: 2, 55: 2, 57: 2,
+  42: 1, 44: 1,
+  46: 2, 49: 2, 51: 2, 52: 2, 53: 2, 55: 2, 57: 2, 59: 2,
 };
 // How busy: the level is the note value a hit sits on. 1 = half notes (every 2 beats), 2 = adds quarters (on the beat),
 // 3 = adds eighths, 4 = adds 16ths, 5 = every hit, including anything off the 16th grid (triplets, flams),
