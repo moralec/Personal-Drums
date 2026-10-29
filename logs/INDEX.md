@@ -1,1 +1,1 @@
-- [2026-10-29](2026-10-29-first-build.md) — First build: build.js (MIDI to three-target hits, 3 busy levels), index.html play-along, Twinkle test song
+- [2026-10-29](2026-10-29-first-build.md) — First build in ten passes: build.js (MIDI to three targets, five note-value levels Beginner-Expert), index.html play-along in the guitar look, measured artwork hit areas, 3-row paged timeline, left-handed mirror, ride on the cup and all hi-hats on the rim; public repo Personal-Drums + Netlify drums-ag-insights (private songs shipped only by deploy.sh)
