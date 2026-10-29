@@ -17,3 +17,5 @@
 - Private songs: `midi/private/*.mid` -> `songs-private.js`, both gitignored. Carlos chose "public repo without it, deploy with it": the Netlify site serves the Bon Jovi data, the repo does not.
 - Netlify project `drums-ag-insights` (id a341d2f6-1441-4fc5-bfc1-06142b28f60e), https://drums-ag-insights.netlify.app, custom domain `drums.ag-insights.co.uk` set on the project. NOT linked to GitHub: `./deploy.sh` is the only publisher (it ships `index.html` + `songs-private.js` from a temp dir, so `midi/`, logs and MEMORY are not served).
 - DNS for ag-insights.co.uk is at IONOS (ui-dns), so the CNAME `drums` -> `drums-ag-insights.netlify.app` is a manual step for Carlos.
+
+**Second pass (same day):** restyled to match guitar (dark/amber); drums now always play in full and the top level is "Every hit" (all mapped hits, 4.0/s on Livin' on a Prayer); visuals use output-latency compensation. Carlos generated `img/source/scene.png` (2000x1493); `tools/measure.py` measured head/rim/cup outlines (colour segmentation) and the page draws halo, fill, ripple and tap area on those exact paths. Checked in headless Chrome with forced glow states; timing by ear still to do.

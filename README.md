@@ -23,7 +23,10 @@ Nothing resident and not deployed yet. Planned: a static site like the guitar ap
 |---|---|
 | `index.html` | The whole app, plus the generated `SONGS` block |
 | `build.js` | MIDI parser and converter: drum mapping, the three busy levels, writes `SONGS` |
-| `midi/` | Source `.mid` files and optional `songs.json` |
+| `midi/` | Source `.mid` files and optional `songs.json` (`midi/private/` is gitignored, shipped by deploy.sh) |
+| `img/` | `source/scene.png` artwork and the generated `scene.webp` |
+| `tools/measure.py` | Measures the head, rim and cup in the artwork and writes their outlines into `index.html` |
+| `deploy.sh` | Builds and publishes to Netlify by CLI |
 
 No dependencies and no outside services. Audio is Web Audio, generated in the page.
 

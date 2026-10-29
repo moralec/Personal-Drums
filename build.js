@@ -111,12 +111,12 @@ const LANE = {
 };
 const RANK = { 2: 0, 0: 1, 1: 2 };
 
-// Level 1 Easy, 2 Medium, 3 Busy. Hits kept at a level are always kept at the next one up.
+// Level 1 Easy, 2 Medium, 3 Every hit. Hits kept at a level are always kept at the next one up.
 // Within a level, hits are placed cup first, then head, then rim, so a crash is never crowded out by a hat.
 const LEVELS = [
   { grid: 1,    laneGap: [0.60, 0.60, 4.0], gap: 0.60, simul: false },
   { grid: 0.5,  laneGap: [0.30, 0.30, 2.0], gap: 0.15, simul: true  },
-  { grid: 0,    laneGap: [0.10, 0.10, 0.6], gap: 0,    simul: true  },
+  { grid: 0,    laneGap: [0, 0, 0],         gap: 0,    simul: true  }, // every mapped hit, so the lights match the drums you hear
 ];
 
 function onGrid(beat, grid) {

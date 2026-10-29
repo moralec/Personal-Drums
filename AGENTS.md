@@ -2,6 +2,8 @@
 
 Single-file HTML play-along for a 3.5-year-old (Carlos's son). Three things to hit: a small drum head (snare), the drum's rim (hi-hat) and a red metal cup (crash / metal). They light up in time with a song.
 
+Deploy: `./deploy.sh` (Netlify CLI; the site is not linked to GitHub because private songs ship only from there).
+
 Sister project of `~/claude/guitar` (same shape: one `index.html`, Node build step, no CDN). Member of the Memory Palace (`.palace`: dashboard-app / personal). Open a session with `memory brief`. Decisions and gotchas go in `MEMORY.md`, session history in `logs/`.
 
 ## How a song gets in
@@ -10,7 +12,11 @@ Sister project of `~/claude/guitar` (same shape: one `index.html`, Node build st
 
 `build.js` has its own SMF parser (no dependencies). It maps General MIDI drum notes to the three targets (head: snare, toms, side stick; rim: closed/pedal hat, ride; cup: crash, splash, china, open hat). The kick has no target and stays in the backing. Every hit gets a minimum level: Easy / Medium / Busy (about 1 / 3.5 / 4.4 hits per second on the test song). Accents are placed first (cup, then head, then rim), and a hit kept at one level is kept at every level above it.
 
-The backing is a built-in Web Audio synth: all non-drum notes plus the kick. "Hear drums" adds the original drum track. Tapping a target on screen plays its sound.
+The whole MIDI plays through a built-in Web Audio synth, drums included. The "Every hit" level lights every mapped hit (the kick has no target and is heard only); Easy and Medium light a simpler subset while the full drums keep playing. Visuals follow what the speaker is playing (audio clock minus `outputLatency`/`baseLatency`). Tapping a target on screen plays its sound.
+
+## The picture and its hit areas
+
+`img/source/scene.png` is the generated artwork (drum, rim, cup). `python3 tools/measure.py` segments it by colour (needs pillow, numpy, opencv-python), writes `img/scene.webp`, and writes the three lane outlines (SVG paths in image pixels) into the `LANES` block of `index.html` (never hand-edit). Each lane gets a halo, a fill, an expanding ring and a tap area drawn on exactly that outline. A new picture means re-running measure.py and checking `img/debug.png` (gitignored). Look and feel follows the guitar app (dark `#0f0f0f`, amber `#f5a623`, Helvetica Neue).
 
 ## Rules of thumb
 

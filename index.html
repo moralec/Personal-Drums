@@ -6,52 +6,63 @@
 <title>Mini Drummer</title>
 <style>
 :root {
-  --bg1: #dff1ff; --bg2: #fff4dc; --ink: #2b2a4c; --card: #ffffff;
-  --head: #8b5cf6; --rim: #2f80ed; --cup: #ffb703; --go: #2dc653; --stop: #ef476f;
+  --bg: #0f0f0f; --card: #141414; --line: #222; --line2: #2a2a2a; --ink: #e0e0e0; --dim: #777;
+  --amber: #f5a623; --blue: #5b9bd5; --coral: #ff6b81; --stop: #e5484d;
 }
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
 body {
-  font-family: ui-rounded, "Nunito", "Avenir Next Rounded", system-ui, sans-serif;
-  color: var(--ink); background: linear-gradient(180deg, var(--bg1), var(--bg2));
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: var(--ink); background: var(--bg);
   touch-action: manipulation; user-select: none; -webkit-user-select: none;
 }
-button { font: inherit; color: inherit; cursor: pointer; border: 0; }
-#app { height: 100%; display: flex; flex-direction: column; padding: max(12px, env(safe-area-inset-top)) 16px max(12px, env(safe-area-inset-bottom)); }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+#app { height: 100%; display: flex; flex-direction: column; max-width: 1100px; margin: 0 auto; padding: max(14px, env(safe-area-inset-top)) 20px max(14px, env(safe-area-inset-bottom)); }
+.brand { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--amber); font-weight: 600; }
 
 /* library */
-.lib-title { font-size: clamp(28px, 6vw, 48px); font-weight: 800; margin: 8px 0 16px; text-align: center; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; overflow: auto; padding: 4px 2px 24px; }
-.card { position: relative; background: var(--card); border-radius: 28px; padding: 20px 12px 16px; text-align: center; box-shadow: 0 6px 0 rgba(43,42,76,.12); display: block; text-decoration: none; color: inherit; }
-.card:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba(43,42,76,.12); }
-.card .emoji { font-size: 64px; line-height: 1.1; }
-.card .name { font-size: 22px; font-weight: 800; margin-top: 6px; }
-.card .meta { font-size: 14px; opacity: .6; margin-top: 4px; }
-.card .star { position: absolute; top: 8px; right: 8px; width: 48px; height: 48px; border-radius: 50%; background: transparent; font-size: 28px; }
-.empty { text-align: center; opacity: .7; margin-top: 40px; font-size: 18px; }
+.lib-head { padding: 22px 0 22px; }
+.lib-h1 { font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -0.5px; margin-top: 6px; }
+.lib-sub { margin-top: 4px; font-size: 15px; color: #666; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; overflow: auto; padding-bottom: 24px; }
+.card { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 24px 16px 18px; text-align: center; display: block; text-decoration: none; color: inherit; }
+.card:hover { border-color: #3a3a3a; }
+.card:active { transform: translateY(1px); }
+.card .emoji { font-size: 56px; line-height: 1.1; }
+.card .name { font-size: 18px; font-weight: 700; color: #fff; margin-top: 10px; }
+.card .meta { font-size: 12px; color: var(--dim); margin-top: 4px; min-height: 16px; letter-spacing: 1px; }
+.card .star { position: absolute; top: 6px; right: 6px; width: 44px; height: 44px; font-size: 22px; color: var(--amber); }
+.empty { color: #555; margin-top: 40px; font-size: 14px; line-height: 1.6; }
 
 /* song */
-.top { display: flex; align-items: center; gap: 12px; }
-.home { width: 64px; height: 64px; border-radius: 50%; background: var(--card); font-size: 30px; box-shadow: 0 4px 0 rgba(43,42,76,.12); flex: none; }
-.song-title { font-size: clamp(22px, 4.5vw, 36px); font-weight: 800; flex: 1; }
-.bpm { font-size: 14px; opacity: .6; }
-.stage { position: relative; flex: 1; min-height: 0; }
-.stage svg { width: 100%; height: 100%; display: block; }
+.top { display: flex; align-items: center; gap: 14px; padding: 6px 0 4px; }
+.home { width: 56px; height: 56px; border-radius: 50%; background: var(--card); border: 1px solid var(--line2); font-size: 24px; flex: none; }
+.home:hover { border-color: var(--amber); }
+.song-label { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--amber); font-weight: 600; }
+.song-title { font-size: clamp(22px, 4.5vw, 32px); font-weight: 800; color: #fff; letter-spacing: -0.5px; flex: 1; line-height: 1.1; }
+.song-meta { font-size: 12px; color: var(--dim); text-align: right; line-height: 1.5; }
+.song-meta strong { color: var(--amber); }
+.stage { position: relative; flex: 1; min-height: 0; background: #131313; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.stage svg, .stage img { width: 100%; height: 100%; display: block; }
 .lane { cursor: pointer; }
 .glow-f { opacity: 0; transform-box: fill-box; transform-origin: center; }
 .glow-h { opacity: 0; }
-#count { position: absolute; left: 50%; top: 8%; transform: translateX(-50%); font-size: clamp(80px, 22vh, 180px); font-weight: 900; color: var(--stop); text-shadow: 0 6px 0 rgba(43,42,76,.15); pointer-events: none; opacity: 0; }
+.ripple { opacity: 0; transform-box: fill-box; transform-origin: center; pointer-events: none; }
+.glow-f { mix-blend-mode: screen; }
+#count { position: absolute; left: 50%; top: 8%; transform: translateX(-50%); font-size: clamp(80px, 22vh, 180px); font-weight: 900; color: var(--amber); pointer-events: none; opacity: 0; }
 #count.pop { animation: pop .5s ease-out; }
 @keyframes pop { 0% { opacity: 1; transform: translateX(-50%) scale(1.5); } 100% { opacity: 0; transform: translateX(-50%) scale(.9); } }
-#done { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 16px; background: rgba(255,255,255,.82); border-radius: 32px; font-size: clamp(40px, 9vw, 80px); font-weight: 900; }
+#done { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 16px; background: rgba(15,15,15,.88); border-radius: 12px; font-size: clamp(36px, 8vw, 72px); font-weight: 800; color: #fff; }
 #done.show { display: flex; }
-.controls { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; padding-top: 8px; }
-.play { width: 112px; height: 112px; border-radius: 50%; font-size: 52px; background: var(--go); color: #fff; box-shadow: 0 8px 0 rgba(0,0,0,.18); }
-.play.stop { background: var(--stop); }
-.play:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(0,0,0,.18); }
-.opts { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; }
-.pill { min-height: 48px; padding: 6px 16px; border-radius: 24px; background: var(--card); font-size: 16px; font-weight: 700; box-shadow: 0 3px 0 rgba(43,42,76,.12); }
-.pill[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.controls { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; padding-top: 10px; }
+.play { width: 96px; height: 96px; border-radius: 50%; font-size: 42px; background: var(--amber); color: #000; }
+.play.stop { background: var(--stop); color: #fff; }
+.play:active { filter: brightness(.9); }
+.seg { display: inline-flex; gap: 2px; background: var(--card); border: 1px solid #1e1e1e; border-radius: 8px; padding: 3px; }
+.seg button { min-height: 44px; padding: 0 14px; border-radius: 6px; color: var(--dim); font-size: 13px; font-weight: 600; }
+.seg button[aria-pressed="true"] { background: var(--line2); color: var(--amber); }
+.pill { min-height: 44px; padding: 0 16px; border-radius: 8px; background: var(--card); border: 1px solid var(--line2); color: #aaa; font-size: 13px; font-weight: 600; }
+.pill[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); }
 </style>
 </head>
 <body>
@@ -59,7 +70,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; }
 <script src="songs-private.js"></script>
 <script>
 /* SONGS:BEGIN */
-const SONGS = [{"slug":"twinkle-twinkle","title":"Twinkle Twinkle","emoji":"⭐","bpm":100,"countIn":4,"dur":28.78,"hits":[[0,1,2],[0,2,1],[300,1,2],[600,1,2],[600,0,1],[900,1,3],[1200,1,1],[1500,1,2],[1800,1,2],[1800,0,1],[2100,2,2],[2400,1,2],[2700,1,2],[3000,1,3],[3000,0,1],[3300,1,2],[3600,1,1],[3900,1,3],[4200,1,2],[4200,0,1],[4500,2,2],[4800,1,2],[5100,1,3],[5400,1,2],[5400,0,1],[5700,1,3],[6000,1,2],[6300,1,3],[6600,1,2],[6600,0,1],[6900,2,2],[7200,1,2],[7500,1,3],[7800,1,2],[7800,0,1],[8100,1,3],[8400,1,2],[8700,1,3],[9000,1,2],[9000,0,1],[9300,2,2],[9300,0,2],[9450,0,3],[9600,1,2],[9900,1,2],[10200,1,3],[10200,0,1],[10500,1,2],[10800,1,2],[11100,1,3],[11400,1,2],[11400,0,1],[11700,2,2],[12000,1,2],[12300,1,2],[12600,1,3],[12600,0,1],[12900,1,2],[13200,1,3],[13500,1,2],[13800,1,2],[13800,0,2],[14400,1,2],[14400,2,1],[14700,1,3],[15000,1,2],[15000,0,2],[15300,1,2],[15600,1,3],[15900,1,2],[16200,1,3],[16200,0,1],[16500,2,2],[16800,1,2],[17100,1,2],[17400,1,3],[17400,0,1],[17700,1,2],[18000,1,1],[18300,1,2],[18600,1,2],[18600,0,1],[18900,2,2],[18900,0,3],[19050,0,3],[19200,1,2],[19500,1,2],[19800,1,2],[19800,0,1],[20100,1,2],[20400,1,3],[20700,1,2],[21000,1,2],[21000,0,1],[21300,2,2],[21600,1,2],[21900,1,3],[22200,1,2],[22200,0,1],[22500,1,2],[22800,1,2],[23100,1,2],[23400,1,3],[23400,0,1],[23700,2,2],[24000,1,1],[24300,1,2],[24600,1,2],[24600,0,1],[24900,1,3],[25200,1,2],[25500,1,2],[25800,1,2],[25800,0,2],[26400,1,2],[26400,2,1],[26700,1,2],[27000,1,2],[27000,0,1],[27300,1,2],[27600,1,2],[27900,1,3],[28200,1,2],[28200,0,1],[28500,2,2],[28500,0,2],[28650,0,3]],"drums":[[0,42,85],[0,36,110],[0,49,110],[300,42,60],[600,42,85],[600,38,100],[900,42,60],[1200,42,85],[1200,36,105],[1500,42,60],[1800,42,85],[1800,38,100],[2100,46,60],[2400,42,85],[2400,36,110],[2700,42,60],[3000,42,85],[3000,38,100],[3300,42,60],[3600,42,85],[3600,36,105],[3900,42,60],[4200,42,85],[4200,38,100],[4500,46,60],[4800,42,85],[4800,36,110],[5100,42,60],[5400,42,85],[5400,38,100],[5700,42,60],[6000,42,85],[6000,36,105],[6300,42,60],[6600,42,85],[6600,38,100],[6900,46,60],[7200,42,85],[7200,36,110],[7500,42,60],[7800,42,85],[7800,38,100],[8100,42,60],[8400,42,85],[8400,36,105],[8700,42,60],[9000,42,85],[9000,38,100],[9300,46,60],[9300,38,70],[9450,38,75],[9600,42,85],[9600,36,110],[9900,42,60],[10200,42,85],[10200,38,100],[10500,42,60],[10800,42,85],[10800,36,105],[11100,42,60],[11400,42,85],[11400,38,100],[11700,46,60],[12000,42,85],[12000,36,110],[12300,42,60],[12600,42,85],[12600,38,100],[12900,42,60],[13200,42,85],[13200,36,105],[13500,42,60],[13800,42,85],[13800,38,100],[14100,46,60],[14400,42,85],[14400,36,110],[14400,49,110],[14700,42,60],[15000,42,85],[15000,38,100],[15300,42,60],[15600,42,85],[15600,36,105],[15900,42,60],[16200,42,85],[16200,38,100],[16500,46,60],[16800,42,85],[16800,36,110],[17100,42,60],[17400,42,85],[17400,38,100],[17700,42,60],[18000,42,85],[18000,36,105],[18300,42,60],[18600,42,85],[18600,38,100],[18900,46,60],[18900,38,70],[19050,38,75],[19200,42,85],[19200,36,110],[19500,42,60],[19800,42,85],[19800,38,100],[20100,42,60],[20400,42,85],[20400,36,105],[20700,42,60],[21000,42,85],[21000,38,100],[21300,46,60],[21600,42,85],[21600,36,110],[21900,42,60],[22200,42,85],[22200,38,100],[22500,42,60],[22800,42,85],[22800,36,105],[23100,42,60],[23400,42,85],[23400,38,100],[23700,46,60],[24000,42,85],[24000,36,110],[24300,42,60],[24600,42,85],[24600,38,100],[24900,42,60],[25200,42,85],[25200,36,105],[25500,42,60],[25800,42,85],[25800,38,100],[26100,46,60],[26400,42,85],[26400,36,110],[26400,49,110],[26700,42,60],[27000,42,85],[27000,38,100],[27300,42,60],[27600,42,85],[27600,36,105],[27900,42,60],[28200,42,85],[28200,38,100],[28500,46,60],[28500,38,70],[28650,38,75]],"bass":[[0,1175,48,90],[1200,1175,55,80],[2400,1175,48,90],[3600,1175,55,80],[4800,1175,41,90],[6000,1175,48,80],[7200,1175,48,90],[8400,1175,55,80],[9600,1175,43,90],[10800,1175,50,80],[12000,1175,48,90],[13200,1175,55,80],[14400,1175,43,90],[15600,1175,50,80],[16800,1175,48,90],[18000,1175,55,80],[19200,1175,48,90],[20400,1175,55,80],[21600,1175,41,90],[22800,1175,48,80],[24000,1175,48,90],[25200,1175,55,80],[26400,1175,43,90],[27600,1175,50,80]],"lead":[[0,575,60,85],[600,575,60,85],[1200,575,67,85],[1800,575,67,85],[2400,575,69,85],[3000,575,69,85],[3600,1175,67,85],[4800,575,65,85],[5400,575,65,85],[6000,575,64,85],[6600,575,64,85],[7200,575,62,85],[7800,575,62,85],[8400,1175,60,85],[9600,575,67,85],[10200,575,67,85],[10800,575,65,85],[11400,575,65,85],[12000,575,64,85],[12600,575,64,85],[13200,1175,62,85],[14400,575,67,85],[15000,575,67,85],[15600,575,65,85],[16200,575,65,85],[16800,575,64,85],[17400,575,64,85],[18000,1175,62,85],[19200,575,60,85],[19800,575,60,85],[20400,575,67,85],[21000,575,67,85],[21600,575,69,85],[22200,575,69,85],[22800,1175,67,85],[24000,575,65,85],[24600,575,65,85],[25200,575,64,85],[25800,575,64,85],[26400,575,62,85],[27000,575,62,85],[27600,1175,60,85]]}];
+const SONGS = [{"slug":"twinkle-twinkle","title":"Twinkle Twinkle","emoji":"⭐","bpm":100,"countIn":4,"dur":28.78,"hits":[[0,1,2],[0,2,1],[300,1,2],[600,1,2],[600,0,1],[900,1,3],[1200,1,1],[1500,1,2],[1800,1,2],[1800,0,1],[2100,2,2],[2400,1,2],[2700,1,2],[3000,1,3],[3000,0,1],[3300,1,2],[3600,1,1],[3900,1,3],[4200,1,2],[4200,0,1],[4500,2,2],[4800,1,2],[5100,1,3],[5400,1,2],[5400,0,1],[5700,1,3],[6000,1,2],[6300,1,3],[6600,1,2],[6600,0,1],[6900,2,2],[7200,1,2],[7500,1,3],[7800,1,2],[7800,0,1],[8100,1,3],[8400,1,2],[8700,1,3],[9000,1,2],[9000,0,1],[9300,2,2],[9300,0,2],[9450,0,3],[9600,1,2],[9900,1,2],[10200,1,3],[10200,0,1],[10500,1,2],[10800,1,2],[11100,1,3],[11400,1,2],[11400,0,1],[11700,2,2],[12000,1,2],[12300,1,2],[12600,1,3],[12600,0,1],[12900,1,2],[13200,1,3],[13500,1,2],[13800,1,2],[13800,0,2],[14100,2,3],[14400,1,2],[14400,2,1],[14700,1,3],[15000,1,2],[15000,0,2],[15300,1,2],[15600,1,3],[15900,1,2],[16200,1,3],[16200,0,1],[16500,2,2],[16800,1,2],[17100,1,2],[17400,1,3],[17400,0,1],[17700,1,2],[18000,1,1],[18300,1,2],[18600,1,2],[18600,0,1],[18900,2,2],[18900,0,3],[19050,0,3],[19200,1,2],[19500,1,2],[19800,1,2],[19800,0,1],[20100,1,2],[20400,1,3],[20700,1,2],[21000,1,2],[21000,0,1],[21300,2,2],[21600,1,2],[21900,1,3],[22200,1,2],[22200,0,1],[22500,1,2],[22800,1,2],[23100,1,2],[23400,1,3],[23400,0,1],[23700,2,2],[24000,1,1],[24300,1,2],[24600,1,2],[24600,0,1],[24900,1,3],[25200,1,2],[25500,1,2],[25800,1,2],[25800,0,2],[26100,2,3],[26400,1,2],[26400,2,1],[26700,1,2],[27000,1,2],[27000,0,1],[27300,1,2],[27600,1,2],[27900,1,3],[28200,1,2],[28200,0,1],[28500,2,2],[28500,0,2],[28650,0,3]],"drums":[[0,42,85],[0,36,110],[0,49,110],[300,42,60],[600,42,85],[600,38,100],[900,42,60],[1200,42,85],[1200,36,105],[1500,42,60],[1800,42,85],[1800,38,100],[2100,46,60],[2400,42,85],[2400,36,110],[2700,42,60],[3000,42,85],[3000,38,100],[3300,42,60],[3600,42,85],[3600,36,105],[3900,42,60],[4200,42,85],[4200,38,100],[4500,46,60],[4800,42,85],[4800,36,110],[5100,42,60],[5400,42,85],[5400,38,100],[5700,42,60],[6000,42,85],[6000,36,105],[6300,42,60],[6600,42,85],[6600,38,100],[6900,46,60],[7200,42,85],[7200,36,110],[7500,42,60],[7800,42,85],[7800,38,100],[8100,42,60],[8400,42,85],[8400,36,105],[8700,42,60],[9000,42,85],[9000,38,100],[9300,46,60],[9300,38,70],[9450,38,75],[9600,42,85],[9600,36,110],[9900,42,60],[10200,42,85],[10200,38,100],[10500,42,60],[10800,42,85],[10800,36,105],[11100,42,60],[11400,42,85],[11400,38,100],[11700,46,60],[12000,42,85],[12000,36,110],[12300,42,60],[12600,42,85],[12600,38,100],[12900,42,60],[13200,42,85],[13200,36,105],[13500,42,60],[13800,42,85],[13800,38,100],[14100,46,60],[14400,42,85],[14400,36,110],[14400,49,110],[14700,42,60],[15000,42,85],[15000,38,100],[15300,42,60],[15600,42,85],[15600,36,105],[15900,42,60],[16200,42,85],[16200,38,100],[16500,46,60],[16800,42,85],[16800,36,110],[17100,42,60],[17400,42,85],[17400,38,100],[17700,42,60],[18000,42,85],[18000,36,105],[18300,42,60],[18600,42,85],[18600,38,100],[18900,46,60],[18900,38,70],[19050,38,75],[19200,42,85],[19200,36,110],[19500,42,60],[19800,42,85],[19800,38,100],[20100,42,60],[20400,42,85],[20400,36,105],[20700,42,60],[21000,42,85],[21000,38,100],[21300,46,60],[21600,42,85],[21600,36,110],[21900,42,60],[22200,42,85],[22200,38,100],[22500,42,60],[22800,42,85],[22800,36,105],[23100,42,60],[23400,42,85],[23400,38,100],[23700,46,60],[24000,42,85],[24000,36,110],[24300,42,60],[24600,42,85],[24600,38,100],[24900,42,60],[25200,42,85],[25200,36,105],[25500,42,60],[25800,42,85],[25800,38,100],[26100,46,60],[26400,42,85],[26400,36,110],[26400,49,110],[26700,42,60],[27000,42,85],[27000,38,100],[27300,42,60],[27600,42,85],[27600,36,105],[27900,42,60],[28200,42,85],[28200,38,100],[28500,46,60],[28500,38,70],[28650,38,75]],"bass":[[0,1175,48,90],[1200,1175,55,80],[2400,1175,48,90],[3600,1175,55,80],[4800,1175,41,90],[6000,1175,48,80],[7200,1175,48,90],[8400,1175,55,80],[9600,1175,43,90],[10800,1175,50,80],[12000,1175,48,90],[13200,1175,55,80],[14400,1175,43,90],[15600,1175,50,80],[16800,1175,48,90],[18000,1175,55,80],[19200,1175,48,90],[20400,1175,55,80],[21600,1175,41,90],[22800,1175,48,80],[24000,1175,48,90],[25200,1175,55,80],[26400,1175,43,90],[27600,1175,50,80]],"lead":[[0,575,60,85],[600,575,60,85],[1200,575,67,85],[1800,575,67,85],[2400,575,69,85],[3000,575,69,85],[3600,1175,67,85],[4800,575,65,85],[5400,575,65,85],[6000,575,64,85],[6600,575,64,85],[7200,575,62,85],[7800,575,62,85],[8400,1175,60,85],[9600,575,67,85],[10200,575,67,85],[10800,575,65,85],[11400,575,65,85],[12000,575,64,85],[12600,575,64,85],[13200,1175,62,85],[14400,575,67,85],[15000,575,67,85],[15600,575,65,85],[16200,575,65,85],[16800,575,64,85],[17400,575,64,85],[18000,1175,62,85],[19200,575,60,85],[19800,575,60,85],[20400,575,67,85],[21000,575,67,85],[21600,575,69,85],[22200,575,69,85],[22800,1175,67,85],[24000,575,65,85],[24600,575,65,85],[25200,575,64,85],[25800,575,64,85],[26400,575,62,85],[27000,575,62,85],[27600,1175,60,85]]}];
 /* SONGS:END */
 if (typeof SONGS_PRIVATE !== "undefined") SONGS.push(...SONGS_PRIVATE);
 
@@ -69,7 +80,6 @@ try { Object.assign(prog, JSON.parse(localStorage.getItem('drumsProgress')) || {
 const saveProg = () => { try { localStorage.setItem('drumsProgress', JSON.stringify(prog)); } catch (e) {} };
 
 // ---------- synth ----------
-const LANES = [{ id: 'head', color: '#8b5cf6' }, { id: 'rim', color: '#2f80ed' }, { id: 'cup', color: '#ffb703' }];
 let ctx = null, master = null, noiseBuf = null;
 
 function audio() {
@@ -146,57 +156,32 @@ function tap(lane) {
   [V.snare, V.rim, V.cup][lane](master, t, 0.9);
 }
 
+/* LANES:BEGIN */
+const SCENE = {"w":2000,"h":1493,"lanes":[{"lane":0,"d":"M193 544 L193 596 L201 625 L213 651 L248 698 L298 741 L370 782 L441 809 L524 829 L610 839 L704 839 L788 829 L879 806 L947 779 L1011 742 L1064 697 L1083 674 L1104 639 L1113 615 L1119 586 L1116 535 L1098 488 L1063 440 L1010 395 L952 361 L878 331 L784 308 L687 298 L579 301 L510 311 L433 331 L369 356 L304 393 L268 421 L243 446 L213 488 L201 514Z","bbox":[191,298,1119,840],"center":[655,568],"area":394835},{"lane":1,"d":"M150 521 L144 556 L144 628 L150 669 L172 719 L185 739 L212 770 L245 800 L276 822 L357 865 L452 897 L556 917 L611 922 L698 922 L756 917 L860 897 L910 882 L961 862 L1035 822 L1075 792 L1104 765 L1125 740 L1142 713 L1159 675 L1166 642 L1166 550 L1154 502 L1125 449 L1085 404 L1052 377 L1016 353 L944 317 L846 285 L751 268 L635 263 L544 270 L445 290 L359 320 L288 357 L228 402 L204 426 L178 460 L160 493Z M192 544 L200 514 L212 488 L242 446 L290 402 L331 375 L369 355 L433 330 L510 310 L579 300 L687 297 L784 307 L878 330 L952 360 L1010 394 L1064 440 L1099 488 L1117 535 L1120 586 L1114 615 L1105 639 L1084 674 L1065 697 L1011 743 L947 780 L879 807 L788 830 L704 840 L610 840 L524 830 L441 810 L370 783 L298 742 L247 698 L212 651 L200 625 L192 596Z","bbox":[144,263,1167,922],"center":[655,658],"area":145711},{"lane":2,"d":"M1489 488 L1446 501 L1410 519 L1381 543 L1362 571 L1355 600 L1355 805 L1365 805 L1372 811 L1378 823 L1378 835 L1375 842 L1367 848 L1355 846 L1356 922 L1348 922 L1345 879 L1333 906 L1333 930 L1349 946 L1354 971 L1380 993 L1392 1000 L1432 1003 L1440 1009 L1446 1019 L1462 1019 L1486 1034 L1527 1039 L1585 1039 L1631 1033 L1648 1017 L1662 1011 L1673 1011 L1688 1017 L1727 997 L1735 978 L1741 972 L1757 967 L1767 936 L1780 926 L1781 912 L1778 899 L1765 899 L1765 920 L1757 920 L1755 891 L1800 891 L1821 887 L1847 875 L1864 858 L1876 835 L1883 803 L1883 778 L1876 746 L1858 716 L1837 699 L1813 688 L1767 678 L1759 673 L1757 593 L1754 579 L1739 551 L1712 525 L1685 509 L1664 508 L1651 494 L1610 488 L1607 485 L1534 482Z M1755 711 L1776 713 L1808 722 L1826 732 L1840 747 L1848 762 L1854 785 L1854 818 L1846 846 L1837 844 L1823 852 L1795 857 L1756 855 L1756 721 L1753 719Z","bbox":[1332,482,1883,1040],"center":[1569,764],"area":216640}]};
+/* LANES:END */
+
 // ---------- scene ----------
-const DRUM = { cx: 340, cy: 290, rx: 280, ry: 170 };
+const GLOW = [
+  { fill: '#f5a623', halo: '#f5a623' },   // head
+  { fill: '#8fd3ff', halo: '#5b9bd5' },   // rim
+  { fill: '#ffe3ea', halo: '#ff6b81' },   // cup
+];
 function sceneSvg() {
-  const dots = [[770, 245], [822, 232], [855, 282], [788, 305], [838, 335], [768, 348]]
-    .map(([x, y]) => `<circle cx="${x}" cy="${y}" r="10" fill="#fff"/>`).join('');
-  return `
-<svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" aria-label="drum and cup">
-  <ellipse cx="500" cy="580" rx="440" ry="16" fill="#2b2a4c" opacity=".1"/>
-  <!-- drum body -->
-  <clipPath id="body"><path d="M60 290 L60 360 A280 170 0 0 0 620 360 L620 290 Z"/></clipPath>
-  <path d="M60 290 L60 360 A280 170 0 0 0 620 360 L620 290 Z" fill="#efe6cf" stroke="#c9b98f" stroke-width="4"/>
-  <g clip-path="url(#body)" fill="none" stroke="#c2ad7c" stroke-width="9">
-    <path d="M60 320 A280 170 0 0 0 620 320"/>
-    <path d="M60 355 A280 170 0 0 0 620 355"/>
-  </g>
-  <!-- drum top -->
-  <ellipse cx="340" cy="290" rx="280" ry="170" fill="#a89377"/>
-  <ellipse cx="340" cy="290" rx="268" ry="158" fill="none" stroke="#2c4a8f" stroke-width="22"/>
-  <ellipse cx="340" cy="290" rx="222" ry="130" fill="#f6f0dc"/>
-  <ellipse cx="340" cy="290" rx="206" ry="118" fill="none" stroke="#b7b9d6" stroke-width="3"/>
-  <text x="340" y="300" font-size="86" text-anchor="middle" fill="#8b5cf6" opacity=".5">♪ ♫ ♪</text>
-
-  <!-- cup (upside down, like the photo) -->
-  <path d="M925 245 q55 0 55 55 q0 55 -55 55" fill="none" stroke="#d62828" stroke-width="24" transform="translate(-45 0)"/>
-  <rect x="745" y="205" width="135" height="165" rx="14" fill="#d62828"/>
-  <ellipse cx="812" cy="205" rx="67" ry="24" fill="#ef4a4a" stroke="#3a2f2f" stroke-width="5" stroke-dasharray="10 14"/>
-  <ellipse cx="812" cy="370" rx="67" ry="22" fill="#a51d1d"/>
-  ${dots}
-
-  <!-- lanes: glow halo + fill overlay + hit area. 0 head, 1 rim, 2 cup -->
-  <g class="lane" data-lane="0">
-    <ellipse id="h0" class="glow-h" cx="340" cy="290" rx="290" ry="185" fill="url(#gl0)"/>
-    <ellipse id="f0" class="glow-f" cx="340" cy="290" rx="222" ry="130" fill="#8b5cf6"/>
-    <ellipse cx="340" cy="290" rx="222" ry="130" fill="transparent"/>
-  </g>
-  <g class="lane" data-lane="1">
-    <ellipse id="h1" class="glow-h" cx="340" cy="290" rx="300" ry="195" fill="url(#gl1)"/>
-    <ellipse id="f1" class="glow-f" cx="340" cy="290" rx="268" ry="158" fill="none" stroke="#3aa0ff" stroke-width="22"/>
-    <ellipse cx="340" cy="290" rx="268" ry="158" fill="none" stroke="transparent" stroke-width="40"/>
-  </g>
-  <g class="lane" data-lane="2">
-    <circle id="h2" class="glow-h" cx="812" cy="290" r="170" fill="url(#gl2)"/>
-    <rect id="f2" class="glow-f" x="745" y="205" width="135" height="165" rx="14" fill="#ffd23f"/>
-    <rect x="720" y="170" width="185" height="230" fill="transparent"/>
-  </g>
-  <defs>
-    <radialGradient id="gl0"><stop offset=".55" stop-color="#8b5cf6" stop-opacity=".7"/><stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/></radialGradient>
-    <radialGradient id="gl1"><stop offset=".6" stop-color="#3aa0ff" stop-opacity=".7"/><stop offset="1" stop-color="#3aa0ff" stop-opacity="0"/></radialGradient>
-    <radialGradient id="gl2"><stop offset=".4" stop-color="#ffd23f" stop-opacity=".8"/><stop offset="1" stop-color="#ffd23f" stop-opacity="0"/></radialGradient>
-  </defs>
-</svg>`;
+  const lane = (i) => {
+    const L = SCENE.lanes[i], c = GLOW[i];
+    const stroke = i === 1 ? ' stroke="transparent" stroke-width="40"' : '';
+    return `<g class="lane" data-lane="${i}">
+      <path id="h${i}" class="glow-h" d="${L.d}" fill="${c.halo}" fill-rule="evenodd" filter="url(#blur)"/>
+      <path id="f${i}" class="glow-f" d="${L.d}" fill="${c.fill}" fill-rule="evenodd"/>
+      <path id="r${i}" class="ripple" d="${L.d}" fill="none" stroke="${c.fill}" stroke-width="10" fill-rule="evenodd"/>
+      <path d="${L.d}" fill="transparent" fill-rule="evenodd" pointer-events="all"${stroke}/>
+    </g>`;
+  };
+  return `<svg viewBox="0 0 ${SCENE.w} ${SCENE.h}" preserveAspectRatio="xMidYMid meet" aria-label="drum and cup">
+    <defs><filter id="blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="26"/></filter></defs>
+    <image href="img/scene.webp" width="${SCENE.w}" height="${SCENE.h}"/>
+    ${lane(0)}${lane(1)}${lane(2)}
+  </svg>`;
 }
 
 // ---------- views ----------
@@ -210,7 +195,8 @@ function libraryView() {
       <div class="name">${s.title}</div>
       <div class="meta">${prog.plays[s.slug] ? '🎉 ' + prog.plays[s.slug] : ''}</div>
     </a>`).join('');
-  app.innerHTML = `<div class="lib-title">🥁 Mini Drummer</div>` +
+  app.innerHTML = `<div class="lib-head"><div class="brand">Mini Drummer</div><div class="lib-h1">Drums</div>
+    <div class="lib-sub">Pick a song, then play along on the drum, its rim and the cup.</div></div>` +
     (SONGS.length ? `<div class="grid">${cards}</div>` : `<div class="empty">No songs yet. Add a .mid to midi/ and run node build.js</div>`);
   app.querySelectorAll('[data-star]').forEach(b => b.addEventListener('click', e => {
     e.preventDefault(); e.stopPropagation();
@@ -221,7 +207,7 @@ function libraryView() {
 }
 
 // play state
-let song = null, run = null, speed = 1, hearDrums = false, laneHits = [[], [], []], nextI = [0, 0, 0];
+let song = null, run = null, speed = 1, laneHits = [[], [], []], nextI = [0, 0, 0];
 const LEAD = 0.5, FLASH = 0.22;
 
 function buildLaneHits() {
@@ -235,20 +221,17 @@ function songView(s) {
   app.innerHTML = `
     <div class="top">
       <button class="home" aria-label="home">🏠</button>
-      <div class="song-title">${s.emoji} ${s.title}</div>
-      <div class="bpm">${s.bpm} bpm</div>
+      <div style="flex:1"><div class="song-label">Now playing</div><div class="song-title">${s.emoji} ${s.title}</div></div>
+      <div class="song-meta"><strong>${s.bpm}</strong> bpm<br>${Math.floor(s.dur / 60)}:${String(Math.round(s.dur % 60)).padStart(2, '0')}</div>
     </div>
     <div class="stage">${sceneSvg()}<div id="count"></div>
       <div id="done"><div>🎉 Yay! 🎉</div><button class="play" id="again" aria-label="again">▶</button></div></div>
     <div class="controls">
-      <div class="opts" id="lvls">
-        ${[1, 2, 3].map(l => `<button class="pill" data-l="${l}" aria-pressed="${prog.level === l}">${['Easy ●', 'Medium ●●', 'Busy ●●●'][l - 1]}</button>`).join('')}
+      <div class="seg" id="lvls">
+        ${[1, 2, 3].map(l => `<button data-l="${l}" aria-pressed="${prog.level === l}">${['Easy', 'Medium', 'Every hit'][l - 1]}</button>`).join('')}
       </div>
       <button class="play" id="go" aria-label="play">▶</button>
-      <div class="opts">
-        <button class="pill" id="slow" aria-pressed="${speed < 1}">🐢 Slow</button>
-        <button class="pill" id="hear" aria-pressed="${hearDrums}">🥁 Hear drums</button>
-      </div>
+      <button class="pill" id="slow" aria-pressed="${speed < 1}">🐢 Slow</button>
     </div>`;
   buildLaneHits();
   app.querySelector('.home').onclick = () => { location.hash = '#/'; };
@@ -258,14 +241,11 @@ function songView(s) {
   app.querySelector('#lvls').onclick = e => {
     const l = +(e.target.dataset && e.target.dataset.l); if (!l) return;
     prog.level = l; saveProg();
-    app.querySelectorAll('#lvls .pill').forEach(b => b.setAttribute('aria-pressed', +b.dataset.l === l));
+    app.querySelectorAll('#lvls button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.l === l));
     buildLaneHits();
   };
   app.querySelector('#slow').onclick = e => {
     speed = speed < 1 ? 1 : 0.6; e.currentTarget.setAttribute('aria-pressed', speed < 1); stopSong();
-  };
-  app.querySelector('#hear').onclick = e => {
-    hearDrums = !hearDrums; e.currentTarget.setAttribute('aria-pressed', hearDrums);
   };
 }
 
@@ -299,7 +279,9 @@ function stopSong() {
   const c = document.getElementById('count'); if (c) c.style.opacity = 0;
 }
 
-const songNow = () => (ctx.currentTime - run.t0) * speed;
+const songNow = () => (ctx.currentTime - run.t0) * speed;                          // what has been scheduled to play
+// What the speaker is playing right now: the audio clock runs ahead of the sound by the output latency.
+const songHeard = () => (ctx.currentTime - (ctx.outputLatency || 0) - (ctx.baseLatency || 0) - run.t0) * speed;
 
 function schedule() {
   if (!run) return;
@@ -321,15 +303,17 @@ function schedule() {
   const dr = song.drums;
   while (run.p.drums < dr.length && dr[run.p.drums][0] / 1000 < horizon) {
     const [t, n, v] = dr[run.p.drums++];
-    if (hearDrums || n === 35 || n === 36) gm(run.bus, n, Math.max(at(t / 1000), ctx.currentTime), v);
+    gm(run.bus, n, Math.max(at(t / 1000), ctx.currentTime), v);
   }
 }
 
-function setGlow(l, v) {
-  const f = document.getElementById('f' + l), h = document.getElementById('h' + l);
+function setGlow(l, v, rp = 1) {
+  const f = document.getElementById('f' + l), h = document.getElementById('h' + l), r = document.getElementById('r' + l);
   if (!f) return;
-  f.style.opacity = v; h.style.opacity = v;
-  f.style.transform = `scale(${1 + 0.05 * v})`;
+  f.style.opacity = v * 0.5; h.style.opacity = v * 0.9;
+  f.style.transform = `scale(${1 + 0.025 * v})`;
+  r.style.opacity = rp < 1 ? 0.9 * (1 - rp) : 0;               // expanding ring right after a hit
+  r.style.transform = `scale(${1 + 0.1 * rp})`;
 }
 const tapFlash = [0, 0, 0];
 function flashTap(l) { tapFlash[l] = performance.now(); if (!run) requestAnimationFrame(tapFrame); }
@@ -345,7 +329,7 @@ function tapFrame() {
 
 function frame() {
   if (!run) return;
-  const now = songNow();
+  const now = songHeard();
   for (let l = 0; l < 3; l++) {
     const a = laneHits[l];
     while (nextI[l] < a.length && a[nextI[l]] <= now) nextI[l]++;
@@ -354,7 +338,7 @@ function frame() {
     const flash = Math.max(0, 1 - (now - last) / speed / FLASH);
     const charge = Math.max(0, 1 - (next - now) / speed / LEAD);
     const tp = Math.max(0, 1 - (performance.now() - tapFlash[l]) / 250);
-    setGlow(l, Math.max(flash, 0.7 * charge * charge, tp));
+    setGlow(l, Math.max(flash, 0.7 * charge * charge, tp), Math.min(1, (now - last) / speed / 0.45));
   }
   // count-in number
   if (now < 0) {

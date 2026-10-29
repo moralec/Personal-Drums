@@ -8,3 +8,6 @@
 - Headless Chrome's audio clock stays at 0 under `--virtual-time-budget`, so timing can't be tested that way; test by ear in a real browser.
 - **Public repo, private songs** (Carlos, 2026-10-29): repo `moralec/Personal-Drums` is public; copyrighted songs live in `midi/private/` and `songs-private.js` (gitignored) and are deployed to Netlify only by `./deploy.sh`. Never link the Netlify site to GitHub (it would deploy without them) and never commit those files.
 - **Netlify CLI takes the project id, not the name**, for `--site` (`drums-ag-insights` -> a341d2f6-…). ag-insights.co.uk DNS is at IONOS, not Netlify: a new subdomain needs a CNAME added by hand.
+- **Look and feel = guitar app** (Carlos, 2026-10-29): dark `#0f0f0f`, amber `#f5a623`, Helvetica Neue, segmented controls. Toddler targets stay big.
+- **Full MIDI plays, drums included; lights must match the hits exactly** (Carlos). So "Every hit" lights all mapped hits and the visuals subtract output latency. Easy/Medium are subsets of what is heard. Kick: audible, no target.
+- **Art is generated, effects are measured:** Carlos generates the picture from a prompt; `tools/measure.py` finds the shapes by colour. The artwork's background is about `#131313`, not `#0f0f0f`; the stage uses `#131313` to avoid a visible seam.
