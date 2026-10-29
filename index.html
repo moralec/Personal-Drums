@@ -464,6 +464,7 @@ function route() {
 }
 addEventListener('hashchange', route);
 route();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(e => console.warn('[DRUMS] offline support unavailable', e));
 </script>
 </body>
 </html>
