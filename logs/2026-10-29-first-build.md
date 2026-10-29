@@ -21,3 +21,7 @@
 **Second pass (same day):** restyled to match guitar (dark/amber); drums now always play in full and the top level is "Every hit" (all mapped hits, 4.0/s on Livin' on a Prayer); visuals use output-latency compensation. Carlos generated `img/source/scene.png` (2000x1493); `tools/measure.py` measured head/rim/cup outlines (colour segmentation) and the page draws halo, fill, ripple and tap area on those exact paths. Checked in headless Chrome with forced glow states; timing by ear still to do.
 
 **Third pass:** head glow shrunk to the middle of the drumhead (measure.py `g` outline); added the 3-row paged timeline (`drawTimeline`). Checked in headless Chrome with forced states (note: a screenshot capture triggers a resize, which redraws the idle timeline; test copies drop that listener). Not yet played through by ear.
+
+**Fourth pass:** timeline rows reordered (rim, drum, cup). Level logic replaced by note values (quarters / eighths / 16ths+): Livin' on a Prayer 692 / 937 / 1006 hits (2.8 / 3.7 / 4.0 per s); Twinkle 75 / 126 / 129. Discussed 'all snares at Easy plus a few others' first, then Carlos chose the note-value rule instead.
+
+**Fourth pass:** timeline rows reordered (rim, drum, cup). Level logic replaced by note values: Quarters / Eighths / 16ths / All hits. Livin' on a Prayer 692 / 937 / 965 / 1006 hits; Twinkle 75 / 126 / 129 / 129. 'All hits' is the song untouched. Discussed 'all snares at Easy plus a few others' first; Carlos chose the note-value rule instead.

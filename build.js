@@ -109,46 +109,21 @@ const LANE = {
   42: 1, 44: 1, 51: 1, 53: 1, 59: 1,
   46: 2, 49: 2, 52: 2, 55: 2, 57: 2,
 };
-const RANK = { 2: 0, 0: 1, 1: 2 };
-
-// Level 1 Easy, 2 Medium, 3 Every hit. Hits kept at a level are always kept at the next one up.
-// Within a level, hits are placed cup first, then head, then rim, so a crash is never crowded out by a hat.
-const LEVELS = [
-  { grid: 1,    laneGap: [0.60, 0.60, 4.0], gap: 0.60, simul: false },
-  { grid: 0.5,  laneGap: [0.30, 0.30, 2.0], gap: 0.15, simul: true  },
-  { grid: 0,    laneGap: [0, 0, 0],         gap: 0,    simul: true  }, // every mapped hit, so the lights match the drums you hear
-];
+// How busy: the level is the note value a hit sits on. 1 = quarter notes (on the beat), 2 = adds eighths, 3 = adds 16ths,
+// 4 = every hit, including anything off the 16th grid (triplets, flams), so the lights match the drums you hear.
+// Levels are nested: a hit shown at one level is shown at every level above it.
+const TOLERANCE = 0.07; // beats; MIDI drums are rarely perfectly on the grid
 
 function onGrid(beat, grid) {
-  if (!grid) return true;
   const r = beat / grid;
-  return Math.abs(r - Math.round(r)) * grid < 0.07;
+  return Math.abs(r - Math.round(r)) * grid < TOLERANCE;
 }
 
-function assignLevels(hits) {
-  // hits: [{ sec, beat, lane }] sorted by time. Returns minLevel per hit (1..3), or 4 if never shown.
-  const minLevel = hits.map(() => 4);
-  const kept = []; // indexes kept so far
-  LEVELS.forEach((L, li) => {
-    const order = hits.map((_, i) => i)
-      .sort((a, b) => RANK[hits[a].lane] - RANK[hits[b].lane] || hits[a].sec - hits[b].sec); // accents first, then time
-    const accepted = kept.slice();
-    for (const i of order) {
-      if (minLevel[i] <= li + 1) continue; // already shown at a lower level
-      const h = hits[i];
-      if (!onGrid(h.beat, L.grid)) continue;
-      let ok = true;
-      for (const j of accepted) {
-        const dt = Math.abs(hits[j].sec - h.sec);
-        const same = hits[j].lane === h.lane;
-        if (same && dt < L.laneGap[h.lane]) { ok = false; break; }
-        if (!same && dt < L.gap && !(L.simul && dt < 0.03)) { ok = false; break; }
-      }
-      if (ok) { accepted.push(i); minLevel[i] = li + 1; }
-    }
-    kept.length = 0; kept.push(...accepted);
-  });
-  return minLevel;
+function levelOf(beat) {
+  if (onGrid(beat, 1)) return 1;
+  if (onGrid(beat, 0.5)) return 2;
+  if (onGrid(beat, 0.25)) return 3;
+  return 4;
 }
 
 // ---------- one song ----------
@@ -168,7 +143,6 @@ function convert(file, meta) {
   const hits = drumsAll
     .filter(n => LANE[n.note] !== undefined)
     .map(n => ({ sec: tsec(n.tick), beat: n.tick / midi.division, lane: LANE[n.note] }));
-  const levels = assignLevels(hits);
 
   const sig = midi.sigs[0] || { num: 4, den: 4 };
   const bpm = Math.round(60e6 / (midi.tempos[0] ? midi.tempos[0].us : 500000));
@@ -178,16 +152,16 @@ function convert(file, meta) {
     slug, title, emoji: (meta && meta.emoji) || '🎵', bpm,
     countIn: sig.den === 4 ? sig.num : 4,
     dur: Math.round(Math.max(...notes.map(n => tsec(n.end))) * 100) / 100,
-    hits: hits.map((h, i) => [r3(h.sec), h.lane, levels[i]]).filter(h => h[2] <= 3),
+    hits: hits.map(h => [r3(h.sec), h.lane, levelOf(h.beat)]),
     drums: drumsAll.map(n => [r3(tsec(n.tick)), n.note, n.vel]),
     bass: pitched.filter(isBass).map(pack),
     lead: pitched.filter(n => !isBass(n)).map(pack),
   };
-  const per = [1, 2, 3].map(l => song.hits.filter(h => h[2] <= l).length);
+  const per = [1, 2, 3, 4].map(l => song.hits.filter(h => h[2] <= l).length);
   const perSec = song.dur ? per.map(n => (n / song.dur).toFixed(2)) : [];
-  console.log(`${slug}: ${bpm} bpm, ${song.dur}s, drum hits easy/medium/busy = ${per.join('/')} (${perSec.join('/')} per s), ` +
+  console.log(`${slug}: ${bpm} bpm, ${song.dur}s, drum hits quarters/eighths/16ths/all = ${per.join('/')} (${perSec.join('/')} per s), ` +
     `${song.bass.length} bass + ${song.lead.length} lead notes, ${song.drums.length} drum notes`);
-  if (!per[0]) console.warn(`  WARN ${slug}: no hits survive at Easy (no drum track on channel 10?)`);
+  if (!per[0]) console.warn(`  WARN ${slug}: no hits on the quarter-note level (no drum track on channel 10?)`);
   return song;
 }
 

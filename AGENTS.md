@@ -10,9 +10,9 @@ Sister project of `~/claude/guitar` (same shape: one `index.html`, Node build st
 
 `midi/<name>.mid` -> `node build.js` -> the generated `SONGS` block in `index.html` (between `/* SONGS:BEGIN */` and `/* SONGS:END */`; never hand-edit it). `node build.js --dry` prints the summary and writes nothing. Optional `midi/songs.json` gives `{ "<slug>": { "title", "emoji" } }`.
 
-`build.js` has its own SMF parser (no dependencies). It maps General MIDI drum notes to the three targets (head: snare, toms, side stick; rim: closed/pedal hat, ride; cup: crash, splash, china, open hat). The kick has no target and stays in the backing. Every hit gets a minimum level: Easy / Medium / Busy (about 1 / 3.5 / 4.4 hits per second on the test song). Accents are placed first (cup, then head, then rim), and a hit kept at one level is kept at every level above it.
+`build.js` has its own SMF parser (no dependencies). It maps General MIDI drum notes to the three targets (head: snare, toms, side stick; rim: closed/pedal hat, ride; cup: crash, splash, china, open hat). The kick has no target and stays in the backing. Every hit gets a minimum level from the note value it sits on: quarter notes = 1 ("Quarters"), eighths = 2, 16ths = 3, anything else (triplets, flams) = 4 ("All hits", the song untouched). Levels are nested. There is no thinning by gaps or priority; `TOLERANCE` in build.js (0.07 beat) decides what counts as on the grid.
 
-The whole MIDI plays through a built-in Web Audio synth, drums included. The "Every hit" level lights every mapped hit (the kick has no target and is heard only); Easy and Medium light a simpler subset while the full drums keep playing. Visuals follow what the speaker is playing (audio clock minus `outputLatency`/`baseLatency`). Tapping a target on screen plays its sound.
+The whole MIDI plays through a built-in Web Audio synth, drums included. The top level (16ths) lights every mapped hit (the kick has no target and is heard only); Quarters and Eighths light a subset while the full drums keep playing. Visuals follow what the speaker is playing (audio clock minus `outputLatency`/`baseLatency`). Tapping a target on screen plays its sound.
 
 ## The picture and its hit areas
 
