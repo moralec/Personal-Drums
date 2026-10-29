@@ -31,3 +31,5 @@
 **Sixth pass:** levels named Beginner / Easy / Medium / Hard / Expert (caption: Level N and the note value).
 
 **Seventh pass:** ride cymbal (GM 51/53/59) moved from the rim lane to the cup lane; the rim is now hi-hat only (42/44).
+
+**Eighth pass:** Left-handed toggle (mirrors the scene, remembered in the browser).

@@ -25,5 +25,6 @@ A canvas under the stage: three rows (Rim, Drum, Cup, top to bottom; `TL_ORDER`)
 ## Rules of thumb
 
 - Tuned for a toddler: big targets, no reading needed, count-in 1-2-3-4. Adult controls (level, slow, hear drums) stay small.
-- Progress is `localStorage` key `drumsProgress` (plays, starred, level). Per browser.
+- Progress is `localStorage` key `drumsProgress` (plays, starred, level, hand). Per browser.
+- **Left-handed** toggle (pill under the stage): mirrors the whole scene with `scaleX(-1)` on the SVG (drum right, cup left). Glows, tap areas and hit effects mirror with it; the timeline rows do not change.
 - Don't rename a song's file once in use: the slug is the progress key.

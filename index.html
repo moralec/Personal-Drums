@@ -44,6 +44,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .song-meta strong { color: var(--amber); }
 .stage { position: relative; flex: 1; min-height: 0; background: #131313; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .stage svg, .stage img { width: 100%; height: 100%; display: block; }
+.stage.lefty svg { transform: scaleX(-1); }   /* left-handed: drum on the right, cup on the left */
 .lane { cursor: pointer; }
 .glow-f { opacity: 0; transform-box: fill-box; transform-origin: center; }
 .glow-h { opacity: 0; }
@@ -78,7 +79,7 @@ const SONGS = [{"slug":"twinkle-twinkle","title":"Twinkle Twinkle","emoji":"⭐"
 if (typeof SONGS_PRIVATE !== "undefined") SONGS.push(...SONGS_PRIVATE);
 
 // ---------- progress ----------
-let prog = { plays: {}, starred: {}, level: 1 };
+let prog = { plays: {}, starred: {}, level: 1, hand: 'right' };
 try { Object.assign(prog, JSON.parse(localStorage.getItem('drumsProgress')) || {}); } catch (e) {}
 const saveProg = () => { try { localStorage.setItem('drumsProgress', JSON.stringify(prog)); } catch (e) {} };
 
@@ -231,7 +232,7 @@ function songView(s) {
       <div style="flex:1"><div class="song-label">Now playing</div><div class="song-title">${s.emoji} ${s.title}</div></div>
       <div class="song-meta"><strong>${s.bpm}</strong> bpm<br>${Math.floor(s.dur / 60)}:${String(Math.round(s.dur % 60)).padStart(2, '0')}</div>
     </div>
-    <div class="stage">${sceneSvg()}<div id="count"></div>
+    <div class="stage${prog.hand === 'left' ? ' lefty' : ''}">${sceneSvg()}<div id="count"></div>
       <div id="done"><div>🎉 Yay! 🎉</div><button class="play" id="again" aria-label="again">▶</button></div></div>
     <canvas id="tl" aria-label="timeline"></canvas>
     <div class="controls">
@@ -243,6 +244,7 @@ function songView(s) {
       </div>
       <button class="play" id="go" aria-label="play">▶</button>
       <button class="pill" id="slow" aria-pressed="${speed < 1}">🐢 Slow</button>
+      <button class="pill" id="lefty" aria-pressed="${prog.hand === 'left'}">Left-handed</button>
     </div>`;
   buildLaneHits();
   app.querySelector('.home').onclick = () => { location.hash = '#/'; };
@@ -255,6 +257,11 @@ function songView(s) {
     app.querySelectorAll('#lvls button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.l === l));
     document.getElementById('lvlnote').textContent = levelCaption(l);
     buildLaneHits();
+  };
+  app.querySelector('#lefty').onclick = e => {
+    prog.hand = prog.hand === 'left' ? 'right' : 'left'; saveProg();
+    e.currentTarget.setAttribute('aria-pressed', prog.hand === 'left');
+    app.querySelector('.stage').classList.toggle('lefty', prog.hand === 'left');
   };
   app.querySelector('#slow').onclick = e => {
     speed = speed < 1 ? 1 : 0.6; e.currentTarget.setAttribute('aria-pressed', speed < 1); stopSong();
