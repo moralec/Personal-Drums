@@ -20,7 +20,7 @@ The whole MIDI plays through a built-in Web Audio synth, drums included. The "Ev
 
 ## Timeline
 
-A canvas under the stage: three rows (Drum, Rim, Cup), one page of 8 beats at a time, an amber playhead sweeping left to right, then the next page. Dots are the hits for the chosen level (faded once played). Drawn by `drawTimeline(now)` from the same `laneHits` and heard-time as the glows. Pages assume the MIDI's first tempo; a song with tempo changes will drift against the beat lines. A new picture means re-running measure.py and checking `img/debug.png` (gitignored). Look and feel follows the guitar app (dark `#0f0f0f`, amber `#f5a623`, Helvetica Neue).
+A canvas under the stage: three rows (Rim, Drum, Cup, top to bottom; `TL_ORDER`), one page of 8 beats at a time, an amber playhead sweeping left to right, then the next page. Dots are the hits for the chosen level (faded once played). Drawn by `drawTimeline(now)` from the same `laneHits` and heard-time as the glows. Pages assume the MIDI's first tempo; a song with tempo changes will drift against the beat lines. A new picture means re-running measure.py and checking `img/debug.png` (gitignored). Look and feel follows the guitar app (dark `#0f0f0f`, amber `#f5a623`, Helvetica Neue).
 
 ## Rules of thumb
 

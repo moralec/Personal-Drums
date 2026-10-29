@@ -364,7 +364,7 @@ function frame() {
 }
 
 // ---------- timeline: three rows, a playhead sweeping left to right, one page of 8 beats at a time ----------
-const TL_COLORS = ['#f5a623', '#5b9bd5', '#ff6b81'], TL_NAMES = ['Drum', 'Rim', 'Cup'], PAGE_BEATS = 8;
+const TL_COLORS = ['#f5a623', '#5b9bd5', '#ff6b81'], TL_NAMES = ['Drum', 'Rim', 'Cup'], PAGE_BEATS = 8, TL_ORDER = [1, 0, 2];   // top to bottom: rim, drum, cup
 function lowerBound(a, x) { let lo = 0, hi = a.length; while (lo < hi) { const m = (lo + hi) >> 1; if (a[m] < x) lo = m + 1; else hi = m; } return lo; }
 
 function drawTimeline(now) {
@@ -382,8 +382,8 @@ function drawTimeline(now) {
   const X = t => x0 + (t - p0) / pageSec * (x1 - x0);
 
   // rows
-  for (let l = 0; l < 3; l++) {
-    const y = padY + l * rowH;
+  for (let row = 0; row < 3; row++) {
+    const l = TL_ORDER[row], y = padY + row * rowH;
     c.fillStyle = 'rgba(255,255,255,0.035)';
     c.beginPath(); c.roundRect(x0, y + 3, x1 - x0, rowH - 6, 8); c.fill();
     c.fillStyle = TL_COLORS[l]; c.globalAlpha = 0.9;
@@ -399,8 +399,8 @@ function drawTimeline(now) {
   }
   // hits
   const r = Math.min(rowH * 0.32, 15);
-  for (let l = 0; l < 3; l++) {
-    const a = laneHits[l], cy = padY + l * rowH + rowH / 2;
+  for (let row = 0; row < 3; row++) {
+    const l = TL_ORDER[row], a = laneHits[l], cy = padY + row * rowH + rowH / 2;
     for (let i = lowerBound(a, p0 - 0.01); i < a.length && a[i] < p0 + pageSec; i++) {
       const t = a[i], x = X(t), d = (now - t) / speed;
       c.fillStyle = TL_COLORS[l];
