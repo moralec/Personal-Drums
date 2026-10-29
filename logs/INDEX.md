@@ -1,0 +1,1 @@
+- [2026-10-29](2026-10-29-first-build.md) — First build: build.js (MIDI to three-target hits, 3 busy levels), index.html play-along, Twinkle test song
