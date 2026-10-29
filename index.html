@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mini Drummer</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="theme-color" content="#0f0f0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mini Drummer">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
 :root {
   --bg: #0f0f0f; --card: #141414; --line: #222; --line2: #2a2a2a; --ink: #e0e0e0; --dim: #777;
@@ -44,6 +52,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .song-meta strong { color: var(--amber); }
 .stage { position: relative; flex: 1; min-height: 0; background: #131313; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .stage svg, .stage img { width: 100%; height: 100%; display: block; }
+.stage.simple .lane[data-lane="1"] { display: none; }   /* 2 pads: the rim is only heard, never lit or tapped */
 .stage.lefty svg { transform: scaleX(-1); }   /* left-handed: drum on the right, cup on the left */
 .lane { cursor: pointer; }
 .glow-f { opacity: 0; transform-box: fill-box; transform-origin: center; }
@@ -65,8 +74,11 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .seg button[aria-pressed="true"] { background: var(--line2); color: var(--amber); }
 .lvl { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .lvl-note { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--dim); }
-.pill { min-height: 44px; padding: 0 16px; border-radius: 8px; background: var(--card); border: 1px solid var(--line2); color: #aaa; font-size: 13px; font-weight: 600; }
-.pill[aria-pressed="true"] { border-color: var(--amber); color: var(--amber); }
+.switches { display: flex; gap: 6px 22px; flex-wrap: wrap; padding: 2px 0 6px; }
+.sw { display: flex; align-items: center; gap: 9px; min-height: 44px; color: var(--dim); font-size: 13px; font-weight: 600; }
+.sw::before { content: ''; width: 38px; height: 22px; border-radius: 11px; background: var(--line2); background-image: radial-gradient(circle at 11px 11px, #888 8px, transparent 9px); background-repeat: no-repeat; transition: background-color .15s; }
+.sw[aria-pressed="true"] { color: var(--amber); }
+.sw[aria-pressed="true"]::before { background-color: var(--amber); background-image: radial-gradient(circle at 27px 11px, #000 8px, transparent 9px); }
 </style>
 </head>
 <body>
@@ -79,7 +91,7 @@ const SONGS = [{"slug":"twinkle-twinkle","title":"Twinkle Twinkle","emoji":"⭐"
 if (typeof SONGS_PRIVATE !== "undefined") SONGS.push(...SONGS_PRIVATE);
 
 // ---------- progress ----------
-let prog = { plays: {}, starred: {}, level: 1, hand: 'right' };
+let prog = { plays: {}, starred: {}, level: 1, hand: 'right', simple: false, slow: false };
 try { Object.assign(prog, JSON.parse(localStorage.getItem('drumsProgress')) || {}); } catch (e) {}
 const saveProg = () => { try { localStorage.setItem('drumsProgress', JSON.stringify(prog)); } catch (e) {} };
 
@@ -214,12 +226,12 @@ function libraryView() {
 const LEVEL_NAME = ['Beginner', 'Easy', 'Medium', 'Hard', 'Expert'];
 const LEVEL_NOTE = ['half notes', 'quarter notes', 'eighth notes', '16th notes', 'every hit'];
 const levelCaption = l => `Level ${l} · ${LEVEL_NOTE[l - 1]}`;
-let song = null, run = null, speed = 1, laneHits = [[], [], []], nextI = [0, 0, 0];
+let song = null, run = null, speed = prog.slow ? 0.6 : 1, laneHits = [[], [], []], nextI = [0, 0, 0];
 const LEAD = 0.5, FLASH = 0.22;
 
 function buildLaneHits() {
   laneHits = [[], [], []];
-  for (const [ms, lane, lvl] of song.hits) if (lvl <= prog.level) laneHits[lane].push(ms / 1000);
+  for (const [ms, lane, lvl] of song.hits) if (lvl <= prog.level && !(prog.simple && lane === 1)) laneHits[lane].push(ms / 1000);
   nextI = [0, 0, 0];
   drawTimeline(run ? songHeard() : 0);
 }
@@ -232,7 +244,12 @@ function songView(s) {
       <div style="flex:1"><div class="song-label">Now playing</div><div class="song-title">${s.emoji} ${s.title}</div></div>
       <div class="song-meta"><strong>${s.bpm}</strong> bpm<br>${Math.floor(s.dur / 60)}:${String(Math.round(s.dur % 60)).padStart(2, '0')}</div>
     </div>
-    <div class="stage${prog.hand === 'left' ? ' lefty' : ''}">${sceneSvg()}<div id="count"></div>
+    <div class="switches">
+      <button class="sw" id="slow" aria-pressed="${speed < 1}">🐢 Slow</button>
+      <button class="sw" id="simple" aria-pressed="${prog.simple}">2 pads</button>
+      <button class="sw" id="lefty" aria-pressed="${prog.hand === 'left'}">Left-handed</button>
+    </div>
+    <div class="stage${prog.hand === 'left' ? ' lefty' : ''}${prog.simple ? ' simple' : ''}">${sceneSvg()}<div id="count"></div>
       <div id="done"><div>🎉 Yay! 🎉</div><button class="play" id="again" aria-label="again">▶</button></div></div>
     <canvas id="tl" aria-label="timeline"></canvas>
     <div class="controls">
@@ -243,8 +260,6 @@ function songView(s) {
         <div class="lvl-note" id="lvlnote">${levelCaption(prog.level)}</div>
       </div>
       <button class="play" id="go" aria-label="play">▶</button>
-      <button class="pill" id="slow" aria-pressed="${speed < 1}">🐢 Slow</button>
-      <button class="pill" id="lefty" aria-pressed="${prog.hand === 'left'}">Left-handed</button>
     </div>`;
   buildLaneHits();
   app.querySelector('.home').onclick = () => { location.hash = '#/'; };
@@ -263,8 +278,14 @@ function songView(s) {
     e.currentTarget.setAttribute('aria-pressed', prog.hand === 'left');
     app.querySelector('.stage').classList.toggle('lefty', prog.hand === 'left');
   };
+  app.querySelector('#simple').onclick = e => {
+    prog.simple = !prog.simple; saveProg();
+    e.currentTarget.setAttribute('aria-pressed', prog.simple);
+    app.querySelector('.stage').classList.toggle('simple', prog.simple);
+    buildLaneHits();
+  };
   app.querySelector('#slow').onclick = e => {
-    speed = speed < 1 ? 1 : 0.6; e.currentTarget.setAttribute('aria-pressed', speed < 1); stopSong();
+    prog.slow = !prog.slow; saveProg(); speed = prog.slow ? 0.6 : 1; e.currentTarget.setAttribute('aria-pressed', speed < 1); stopSong();
   };
 }
 
@@ -381,6 +402,7 @@ function frame() {
 
 // ---------- timeline: three rows, a playhead sweeping left to right, one page of 8 beats at a time ----------
 const TL_COLORS = ['#f5a623', '#5b9bd5', '#ff6b81'], TL_NAMES = ['Drum', 'Rim', 'Cup'], PAGE_BEATS = 8, TL_ORDER = [1, 0, 2];   // top to bottom: rim, drum, cup
+const tlRows = () => TL_ORDER.filter(l => !(prog.simple && l === 1));
 function lowerBound(a, x) { let lo = 0, hi = a.length; while (lo < hi) { const m = (lo + hi) >> 1; if (a[m] < x) lo = m + 1; else hi = m; } return lo; }
 
 function drawTimeline(now) {
@@ -394,12 +416,12 @@ function drawTimeline(now) {
 
   const beat = 60 / song.bpm, pageSec = PAGE_BEATS * beat;
   const page = Math.max(0, Math.floor(now / pageSec)), p0 = page * pageSec;
-  const padY = 10, labelW = 90, x0 = labelW, x1 = W - 14, rowH = (H - padY * 2) / 3;
+  const rows = tlRows(), padY = 10, labelW = 90, x0 = labelW, x1 = W - 14, rowH = (H - padY * 2) / rows.length;
   const X = t => x0 + (t - p0) / pageSec * (x1 - x0);
 
   // rows
-  for (let row = 0; row < 3; row++) {
-    const l = TL_ORDER[row], y = padY + row * rowH;
+  for (let row = 0; row < rows.length; row++) {
+    const l = rows[row], y = padY + row * rowH;
     c.fillStyle = 'rgba(255,255,255,0.035)';
     c.beginPath(); c.roundRect(x0, y + 3, x1 - x0, rowH - 6, 8); c.fill();
     c.fillStyle = TL_COLORS[l]; c.globalAlpha = 0.9;
@@ -415,8 +437,8 @@ function drawTimeline(now) {
   }
   // hits
   const r = Math.min(rowH * 0.32, 15);
-  for (let row = 0; row < 3; row++) {
-    const l = TL_ORDER[row], a = laneHits[l], cy = padY + row * rowH + rowH / 2;
+  for (let row = 0; row < rows.length; row++) {
+    const l = rows[row], a = laneHits[l], cy = padY + row * rowH + rowH / 2;
     for (let i = lowerBound(a, p0 - 0.01); i < a.length && a[i] <= p0 + pageSec + 0.01; i++) {   // the right edge is beat 0 of the next page: a hit there shows on both
       const t = a[i], x = X(t), d = (now - t) / speed;
       c.fillStyle = TL_COLORS[l];

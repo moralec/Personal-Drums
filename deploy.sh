@@ -6,7 +6,8 @@ cd "$(dirname "$0")"
 node build.js
 d=$(mktemp -d)
 cp index.html "$d/"
-mkdir "$d/img" && cp img/scene.webp "$d/img/"
+mkdir "$d/img" && cp img/scene.webp img/icon-*.png img/apple-touch-icon.png "$d/img/"
+cp manifest.webmanifest "$d/"
 [ -f songs-private.js ] && cp songs-private.js "$d/"
 netlify deploy --prod --dir "$d" --site "${NETLIFY_SITE:-a341d2f6-1441-4fc5-bfc1-06142b28f60e}"  # drums-ag-insights
 rm -rf "$d"
