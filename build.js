@@ -3,7 +3,11 @@
 //   node build.js            convert every midi/*.mid and rewrite index.html
 //   node build.js --dry      convert and print the summary, write nothing
 // midi/*.mid go into index.html (public). midi/private/*.mid go into songs-private.js instead (gitignored, shipped by deploy.sh only).
-// Optional midi/songs.json: { "<slug>": { "title": "...", "emoji": "..." } }
+// Optional midi/songs.json: { "<slug>": { "title": "...", "emoji": "...", "audio": { "a": 1.0072, "b": -1.488, "dur": 251.4 } } }
+//   audio = the real recording (audio/<slug>.m4a + audio/<slug>-slow.m4a, made by tools/align.py). map = [[midi s, recording s], ...],
+//   one knot per bar, linear between knots; every time in the song is converted to the recording's clock and the file starts at song time 0.
+//   audio.end = where the recording becomes inaudible (it fades out, the MIDI plays on): later hits and notes are dropped.
+//   node build.js --raw-notes <slug>   print that song's drums/bass/lead in MIDI time (what tools/align.py aligns against)
 
 const fs = require('fs');
 const path = require('path');
@@ -131,7 +135,7 @@ function levelOf(beat) {
 
 const r3 = x => Math.round(x * 1000);
 
-function convert(file, meta) {
+function convert(file, meta, raw) {
   const midi = parseMidi(fs.readFileSync(file));
   const tsec = tickToSecFn(midi.division, midi.tempos);
   const notes = extractNotes(midi);
@@ -146,21 +150,36 @@ function convert(file, meta) {
     .map(n => ({ sec: tsec(n.tick), beat: n.tick / midi.division, lane: LANE[n.note] }));
 
   const sig = midi.sigs[0] || { num: 4, den: 4 };
-  const bpm = Math.round(60e6 / (midi.tempos[0] ? midi.tempos[0].us : 500000));
-  const pack = n => [r3(tsec(n.tick)), r3(tsec(n.end) - tsec(n.tick)), n.note, n.vel];
+  const us = midi.tempos[0] ? midi.tempos[0].us : 500000;
+  const bpm = Math.round(60e6 / us);
+  const au = !raw && meta && meta.audio;
+  const A = au ? (au.map[au.map.length - 1][1] - au.map[0][1]) / (au.map[au.map.length - 1][0] - au.map[0][0]) : 1;   // mean tempo ratio, for the count-in beat
+  const K = au && au.map;   // MIDI seconds -> recording seconds
+  const gone = t => au && t > au.end;   // after the fade-out
+  const at = sec => {
+    if (!K) return sec;
+    let i = 1; while (i < K.length - 1 && K[i][0] < sec) i++;   // piecewise linear; the end segments extend past the first/last knot
+    const [x0, y0] = K[i - 1], [x1, y1] = K[i];
+    return y0 + (sec - x0) * (y1 - y0) / (x1 - x0);
+  };
+  const endSec = Math.max(...notes.map(n => tsec(n.end)));
+  const pack = n => [r3(at(tsec(n.tick))), r3((tsec(n.end) - tsec(n.tick)) * A), n.note, n.vel];
   const isBass = n => n.prog >= 32 && n.prog <= 39;
   const song = {
     slug, title, emoji: (meta && meta.emoji) || '🎵', bpm,
+    beat: Math.round(us * A) / 1e6,   // seconds per beat, for the count-in
+    beats: Array.from({ length: Math.ceil(endSec / (us / 1e6)) + 9 }, (_, k) => r3(at(k * us / 1e6))),   // where each beat falls on the song's clock (the timeline's grid)
     countIn: sig.den === 4 ? sig.num : 4,
-    dur: Math.round(Math.max(...notes.map(n => tsec(n.end))) * 100) / 100,
-    hits: hits.map(h => [r3(h.sec), h.lane, levelOf(h.beat)]),
-    drums: drumsAll.map(n => [r3(tsec(n.tick)), n.note, n.vel]),
-    bass: pitched.filter(isBass).map(pack),
-    lead: pitched.filter(n => !isBass(n)).map(pack),
+    dur: au ? Math.min(au.dur, au.end + 1.5) : Math.round(Math.max(...notes.map(n => tsec(n.end))) * 100) / 100,
+    ...(au ? { audio: `audio/${slug}.m4a`, audioSlow: `audio/${slug}-slow.m4a` } : {}),
+    hits: hits.filter(h => !gone(at(h.sec))).map(h => [r3(at(h.sec)), h.lane, levelOf(h.beat)]),
+    drums: drumsAll.filter(n => !gone(at(tsec(n.tick)))).map(n => [r3(at(tsec(n.tick))), n.note, n.vel]),
+    bass: pitched.filter(isBass).filter(n => !gone(at(tsec(n.tick)))).map(pack),
+    lead: pitched.filter(n => !isBass(n)).filter(n => !gone(at(tsec(n.tick)))).map(pack),
   };
   const per = [1, 2, 3, 4, 5].map(l => song.hits.filter(h => h[2] <= l).length);
   const perSec = song.dur ? per.map(n => (n / song.dur).toFixed(2)) : [];
-  console.log(`${slug}: ${bpm} bpm, ${song.dur}s, drum hits by level 1-5 (halves/quarters/eighths/16ths/all) = ${per.join('/')} (${perSec.join('/')} per s), ` +
+  if (!raw) console.log(`${slug}: ${bpm} bpm, ${song.dur}s, drum hits by level 1-5 (halves/quarters/eighths/16ths/all) = ${per.join('/')} (${perSec.join('/')} per s), ` +
     `${song.bass.length} bass + ${song.lead.length} lead notes, ${song.drums.length} drum notes`);
   if (!per[0]) console.warn(`  WARN ${slug}: no hits on the half-note level (no drum track on channel 10?)`);
   return song;
@@ -180,6 +199,16 @@ function convertDir(dir) {
     catch (err) { console.error(`FAIL ${f}: ${err.message}`); process.exitCode = 1; }
   }
   return out;
+}
+
+const rawAt = process.argv.indexOf('--raw-notes');
+if (rawAt > 0) {
+  const want = process.argv[rawAt + 1];
+  for (const dir of [MIDI_DIR, path.join(MIDI_DIR, 'private')]) {
+    const f = fs.existsSync(dir) && fs.readdirSync(dir).find(f => /\.midi?$/i.test(f) && slugOf(f) === want);
+    if (f) { const { drums, bass, lead, beat, countIn } = convert(path.join(dir, f), metas[want], true); fs.writeSync(1, JSON.stringify({ drums, bass, lead, beat, countIn })); process.exit(0); }
+  }
+  console.error(`no midi for ${want}`); process.exit(1);
 }
 
 const songs = convertDir(MIDI_DIR);
